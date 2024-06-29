@@ -1,5 +1,5 @@
 import { useLocalStorageState } from 'ahooks';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { last } from 'underscore';
 import { CurrentPrompt } from "./Current";
 import { LatestPrompt } from "./Lastest";
@@ -10,12 +10,17 @@ import './index.scss';
 import { getTimesOfList } from "./utils";
 
 export default () => {
-  const [feed = FeedAction.none, setFeeding] = useLocalStorageState<FeedAction>('this-feed-state', {defaultValue: FeedAction.none});
-  const [feedRecords, setFeedRecords] = useState<FeedRecord[]>([]);
+  const [feed = FeedAction.none, setFeeding] = useLocalStorageState<FeedAction>(
+    'this-feed-state',
+    {defaultValue: FeedAction.none}
+  );
+  
+  const [feedRecords, setFeedRecords] = useState<FeedRecord[]>(() => {
+    return feedDataBase.read();
+  });
+  
   const [thisFeed = [], setThisFeed] = useLocalStorageState<number[]>('this-feed', {defaultValue: []});
-  useEffect(() => {
-    setFeedRecords(feedDataBase.read());
-  }, []);
+
   const onSetFeeding = useCallback((state: FeedAction) => {
     setFeeding(state);
     if (state === FeedAction.none) {

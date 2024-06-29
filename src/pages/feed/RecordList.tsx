@@ -20,7 +20,7 @@ export const RecordList = ({ records, refresh }: { records: FeedRecord[], refres
       <div>宝宝吃饭笔记</div>
       <ul>
         {
-          records.map((r, i) => (
+          [...records].reverse().map((r, i) => (
             <li key={i} data-id={r.id}>
               <div>        
                 <span>{dayjs(last(r.times)).format('YYYY-MM-DD HH:mm')}</span>
@@ -34,6 +34,7 @@ export const RecordList = ({ records, refresh }: { records: FeedRecord[], refres
           ))
         }
       </ul>
+      <div className="feed-list-cover"></div>
     </div>
   );
 }

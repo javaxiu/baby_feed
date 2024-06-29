@@ -8,9 +8,10 @@ import {
 import Feed from './pages/feed';
 import Poop from "./pages/poop";
 import Home from "./pages/home";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import classnames from 'classnames';
 import './main.scss';
+import { ring } from "./pages/feed/db";
 
 const HomePage = () => {
   const current = useLocation()?.pathname || 'home';
@@ -18,12 +19,20 @@ const HomePage = () => {
   const goto = useCallback((e: React.MouseEvent) => {
     const p = (e.currentTarget as any).dataset.key;
     navigate(p);
+    if (p !== '/feed') {
+      setTimeout(() => {
+        navigate('/feed');
+      }, 5000);
+    }
   }, [navigate]);
   const routes = useRoutes([
     { path: '/home', element: <Home /> },
     { path: '/feed', element: <Feed /> },
     { path: '/poop', element: <Poop /> },
   ]);
+  useEffect(() => {
+    ring.init(navigate);
+  }, []);
   return (
     <div className="home-container-wrap">
     <div className="home-container">{routes}</div>
