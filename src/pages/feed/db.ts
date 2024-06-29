@@ -30,7 +30,6 @@ export const feedDataBase = {
   write(record: FeedRecord) {
     feedDataBase.list.push(record);
     localStorage.setItem('feed_records', JSON.stringify(feedDataBase.list));
-    ring.feed();
   },
   delete(id: number) {
     feedDataBase.list = feedDataBase.list.filter(x => x.id !== id);

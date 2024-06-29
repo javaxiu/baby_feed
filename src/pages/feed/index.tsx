@@ -5,7 +5,7 @@ import { CurrentPrompt } from "./Current";
 import { LatestPrompt } from "./Lastest";
 import { RecordList } from "./RecordList";
 import StartBtn, { FeedAction } from "./StartBtn";
-import { FeedRecord, feedDataBase } from "./db";
+import { FeedRecord, feedDataBase, ring } from "./db";
 import './index.scss';
 import { getTimesOfList } from "./utils";
 
@@ -23,6 +23,7 @@ export default () => {
 
   const onSetFeeding = useCallback((state: FeedAction) => {
     setFeeding(state);
+    ring.feed();
     if (state === FeedAction.none) {
       setFeedRecords(list => {
         const newRecord: FeedRecord = {
