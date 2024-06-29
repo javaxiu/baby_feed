@@ -8,10 +8,7 @@ import fullGif from '../../assets/full.gif';
 import hugGif from '../../assets/hug.gif';
 import hungryGif from '../../assets/hungry.gif';
 import { FeedAction } from './StartBtn';
-import { FeedRecord, ring } from './db';
-
-const HOUR = 60 * 60 * 1000;
-const MINUTE = 60 * 1000;
+import { FeedRecord, HOUR, MINUTE, ring } from './db';
 
 export const LatestPrompt = ({ record, feedState }: { record?: FeedRecord, feedState: FeedAction }) => {
   if (!record) return <div>还没有记录耶</div>;

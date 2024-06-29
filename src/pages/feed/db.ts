@@ -56,7 +56,7 @@ export const ring = new class Ring {
   }
   nextNotifyTime = 0;
   feed() {
-    this.nextNotifyTime = Date.now() + 3 * HOUR;
+    this.nextNotifyTime = Date.now() + 2.8 * HOUR;
   }
   play = (play: boolean) => {
     if (!this.el.current) return;

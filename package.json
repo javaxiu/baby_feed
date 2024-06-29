@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "android:dev": "pnpm run tauri android dev",
-    "android:build": "pnpm run tauri android build --target armv7"
+    "android:build": "pnpm run tauri android build --target armv7",
+    "mv": "move .\\src-tauri\\gen\\android\\app\\build\\outputs\\apk\\universal\\release\\app-universal-release-unsigned.apk app.apk",
+    "sign": "apksigner sign --ks android.keystore --ks-key-alias androidtest app.apk",
+    "release": "pnpm run android:build && pnpm run mv && pnpm run sign"
   },
   "dependencies": {
-    "@mui/material": "^5.15.20",
     "@tauri-apps/api": ">=2.0.0-beta.0",
     "@tauri-apps/plugin-shell": ">=2.0.0-beta.0",
     "@tauri-apps/plugin-sql": "2.0.0-beta.5",
@@ -25,9 +27,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
-    "react-weui": "^1.2.3",
-    "underscore": "^1.13.6",
-    "weui": "^2.6.13"
+    "underscore": "^1.13.6"
   },
   "devDependencies": {
     "@tauri-apps/cli": ">=2.0.0-beta.0",

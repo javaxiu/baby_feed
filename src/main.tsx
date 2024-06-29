@@ -29,6 +29,7 @@ const HomePage = () => {
     { path: '/home', element: <Home /> },
     { path: '/feed', element: <Feed /> },
     { path: '/poop', element: <Poop /> },
+    { path: '/', element: <Home /> },
   ]);
   useEffect(() => {
     ring.init(navigate);
