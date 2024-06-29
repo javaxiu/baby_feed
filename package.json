@@ -1,0 +1,42 @@
+{
+  "name": "baby_feed",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "android:dev": "pnpm run tauri android dev",
+    "android:build": "pnpm run tauri android build --target armv7"
+  },
+  "dependencies": {
+    "@mui/material": "^5.15.20",
+    "@tauri-apps/api": ">=2.0.0-beta.0",
+    "@tauri-apps/plugin-shell": ">=2.0.0-beta.0",
+    "@tauri-apps/plugin-sql": "2.0.0-beta.5",
+    "@types/underscore": "^1.11.15",
+    "ahooks": "^3.8.0",
+    "antd-mobile": "^5.36.1",
+    "classnames": "^2.5.1",
+    "dayjs": "^1.11.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^6.23.1",
+    "react-router-dom": "^6.23.1",
+    "react-weui": "^1.2.3",
+    "underscore": "^1.13.6",
+    "weui": "^2.6.13"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": ">=2.0.0-beta.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.1",
+    "internal-ip": "^7.0.0",
+    "sass": "^1.77.6",
+    "typescript": "^5.0.2",
+    "vite": "^5.0.0"
+  }
+}

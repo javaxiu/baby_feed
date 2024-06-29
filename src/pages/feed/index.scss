@@ -1,0 +1,42 @@
+.feed-page {
+  .feed-list {
+    margin: 10px 10px 28px 10px;
+
+    ul {
+      max-height: calc(100vh - 600px);
+      overflow-y: auto;
+    }
+    li {
+      border-bottom: 1px solid #ddd;
+      padding: 12px 0;
+      color: #999;
+      display: flex;
+      justify-content: space-between;
+      div > span {
+        padding: 0 5px;
+        
+      }
+    }
+    &-sider {
+      text-align: center;
+      font-size: 18px;
+      color: #999;
+      .total-time {
+        font-size: 20px;
+        color: #000;
+        font-weight: bold;
+      }
+      img {
+        width: 50%;
+      }
+    }
+    &.current {
+      margin-top: 10vh;
+    }
+  }
+  .lastest-prompt {
+    text-align: center;
+    font-size: 18px;
+    margin: 40px;
+  }
+}
