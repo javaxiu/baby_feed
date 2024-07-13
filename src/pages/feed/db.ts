@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client"
 import mamaMp3 from '../../assets/mama.mp3';
 import { Dialog } from "antd-mobile";
 import { last } from "underscore";
+import DataBase from "../../components/database";
 
 export const HOUR = 60 * 60 * 1000;
 export const MINUTE = 60 * 1000;
@@ -16,27 +17,7 @@ export interface FeedRecord {
   side?: 'left' | 'right'
 }
 
-export const feedDataBase = {
-  list: [] as FeedRecord[],
-  read(): FeedRecord[] {
-    if (!feedDataBase.list?.length) {
-      try {
-        feedDataBase.list = JSON.parse(localStorage.getItem('feed_records') || '');
-      } catch {
-        //
-      }
-    }
-    return feedDataBase.list;
-  },
-  write(record: FeedRecord) {
-    feedDataBase.list.push(record);
-    localStorage.setItem('feed_records', JSON.stringify(feedDataBase.list));
-  },
-  delete(id: number) {
-    feedDataBase.list = feedDataBase.list.filter(x => x.id !== id);
-    localStorage.setItem('feed_records', JSON.stringify(feedDataBase.list))
-  },
-}
+export const feedDataBase = new DataBase<FeedRecord>('feed_records');
 
 export const ring = new class Ring {
   nextNotifyTime = 0;
@@ -44,7 +25,8 @@ export const ring = new class Ring {
   el = createRef<HTMLAudioElement>();
   init(navigate: Function) {
     this.navigate = navigate;
-    this.nextNotifyTime = last(last(feedDataBase.read())?.times || []) || 0;
+    this.nextNotifyTime = last(feedDataBase.latest()?.times || []) || 0;
+    this.nextNotifyTime += 2.8 * HOUR;
     const container = document.createElement('div');
     document.body.append(container);
     ReactDOM.createRoot(container).render(React.createElement('audio', {

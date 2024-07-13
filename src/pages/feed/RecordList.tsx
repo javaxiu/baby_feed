@@ -10,11 +10,11 @@ export const RecordList = ({ records, refresh }: { records: FeedRecord[], refres
     Dialog.confirm({
       content: '要删掉吗'+id,
       onConfirm: async () => {
-        feedDataBase.delete(id!);
+        feedDataBase.remove(records.find(r => r.id === id)!);
         refresh();
       },
     })
-  }, []);
+  }, [records]);
   return (
     <div className="feed-list">
       <div>宝宝吃饭笔记</div>

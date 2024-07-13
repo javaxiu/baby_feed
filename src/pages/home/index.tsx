@@ -7,10 +7,11 @@ import './index.scss';
 
 export default () => {
   const latestEventNotice = useMemo(() => {
-    const latestEvent = last(scheduleDb.get())!;
+    const latestEvent = last(scheduleDb.get());
+    if (!latestEvent) return null;
     const date = dayjs(latestEvent.date);
     const dayleft = date.diff(dayjs(), 'day');
-    if (dayleft < 0) return '';
+    if (dayleft < 0) return null;
     return <span>还有 {dayleft} 天就要去 <b>{latestEvent.event}</b> 啦 <br /> 是周 {date.day()} 哦</span>;
   }, []);
   return (

@@ -1,0 +1,26 @@
+
+.bottom-button {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.circle-button {
+  --size: 64px;
+  background-color: var(--bg);
+  border-radius: 50%;
+  width: var(--size);
+  height: var(--size);
+  box-shadow: color-mix(in srgb, var(--bg) 50%, #FFFFFF) 2px 8px 10px;
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  display: flex;
+  font-size: 36px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}

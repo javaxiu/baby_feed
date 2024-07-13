@@ -8,34 +8,26 @@ import StartBtn, { FeedAction } from "./StartBtn";
 import { FeedRecord, feedDataBase, ring } from "./db";
 import './index.scss';
 import { getTimesOfList } from "./utils";
-import { Dialog } from 'antd-mobile';
+import { asyncPrompt } from '../../utils/prompt';
 
 
 const promptForSide = () => {
-  return new Promise((resolve) => {
-    Dialog.confirm({
-      title: '喂的哪一边嘛',
-      cancelText: "左边",
-      confirmText: "右边",
-      onConfirm() {
-        resolve('right');
-      },
-      onCancel() {
-        resolve('left');
-      }
-    })
+  return asyncPrompt({
+    title: '喂的哪一边嘛',
+    cancelText: "左边",
+    confirmText: "右边",
+    okKey: 'right' as const,
+    noKey: 'left' as const,
   });
 }
 
 export default () => {
+  const { list, add, refresh } = feedDataBase.useDataBaseList();
+
   const [feed = FeedAction.none, setFeeding] = useLocalStorageState<FeedAction>(
     'this-feed-state',
     {defaultValue: FeedAction.none}
   );
-  
-  const [feedRecords, setFeedRecords] = useState<FeedRecord[]>(() => {
-    return feedDataBase.read();
-  });
   
   const [thisFeed = [], setThisFeed] = useLocalStorageState<number[]>('this-feed', {defaultValue: []});
 
@@ -44,21 +36,14 @@ export default () => {
     ring.feed();
     if (state === FeedAction.none) {
       const side = await promptForSide();
-      setFeedRecords(list => {
-        const newRecord: FeedRecord = {
-          id: Date.now(),
-          times: thisFeed,
-          type: 'mon',
-          volumn: getTimesOfList(thisFeed, true),
-          side: side as any,
-        };
-        const newList: FeedRecord[] = [
-          ...list || [],
-          newRecord,
-        ];
-        feedDataBase.write(newRecord);
-        return newList;
-      });
+      const newRecord: FeedRecord = {
+        id: Date.now(),
+        times: thisFeed,
+        type: 'mon',
+        volumn: getTimesOfList(thisFeed, true),
+        side: side as any,
+      };
+      add(newRecord);
       setThisFeed([]);
     } else {
       setThisFeed(list => ([...(list || []), Date.now()]));
@@ -69,8 +54,8 @@ export default () => {
       {
         feed === FeedAction.none ? (
           <>
-            <RecordList records={feedRecords} refresh={() => setFeedRecords(feedDataBase.read())}/>
-            <LatestPrompt record={last(feedRecords)!} feedState={feed}/>
+            <RecordList records={list} refresh={refresh}/>
+            <LatestPrompt record={last(list)!} feedState={feed}/>
           </>
         ) : (
           <CurrentPrompt times={thisFeed} feedState={feed}/>
