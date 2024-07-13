@@ -1,6 +1,8 @@
 .calendar-blk {
   &-cal {
     margin-top: 12px;
+    max-height: calc(100vh - 300px);
+    overflow: hidden;
   }
   &-event-list {
     margin: 60px 20px 0 50px;

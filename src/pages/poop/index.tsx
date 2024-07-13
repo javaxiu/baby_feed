@@ -1,13 +1,12 @@
+import { Dialog, Form, Radio, Space } from 'antd-mobile';
+import type { FormInstance } from 'antd-mobile/es/components/form';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
 import { createRef, useCallback, useMemo } from 'react';
 import poopGif from '../../assets/poop.gif';
 import { ButtomButton, Button } from '../../components/Button';
+import db, { Color, PoopRecord, Smell, Style } from './db';
 import './index.scss';
-import db, { PoopRecord } from './db';
-import { Dialog, Form, Radio, Space } from 'antd-mobile';
-import { Color, Smell, Style } from './db';
-import classNames from 'classnames';
-import { FormInstance } from 'antd-mobile/es/components/form';
-import dayjs from 'dayjs';
 
 const formFields = [
   {

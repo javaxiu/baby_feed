@@ -1,4 +1,4 @@
-import { Calendar, CalendarRef, Dialog, Input, InputRef, Toast } from 'antd-mobile';
+import { CalendarPickerView, CalendarPickerViewRef, Dialog, Input, InputRef, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ButtomButton, Button } from '../../components/Button';
@@ -15,7 +15,7 @@ const Schedule = () => {
     _changeSelected(date ? dayjs(date).startOf('day').toDate(): date);
   }, [_changeSelected]);
 
-  const calendarRef = useRef<CalendarRef | null>(null);
+  const calendarRef = useRef<CalendarPickerViewRef  | null>(null);
 
   const inputRef = useRef<InputRef>(null);
 
@@ -58,7 +58,7 @@ const Schedule = () => {
   }, [selectedDayjs]);
 
   const goToday = useCallback(() => {
-    calendarRef.current?.jumpToToday();
+    // calendarRef.current?.jumpToToday();
     changeSelected(dayjs().toDate())
   }, []);
 
@@ -69,15 +69,12 @@ const Schedule = () => {
 
   return (
     <>
-      <Calendar
+      <CalendarPickerView
         ref={calendarRef}
         className='calendar-blk-cal'
         selectionMode="single"
-        prevMonthButton={<span>上一月</span>}
-        nextMonthButton={<span>下一月</span>}
-        prevYearButton={null}
-        nextYearButton={null}
-        renderLabel={(date) => dateEvent[+dayjs(date).startOf('day')]?.length ? dot : null}
+        title="宝宝的日程"
+        renderBottom={(date) => dateEvent[+dayjs(date).startOf('day')]?.length ? dot : null}
         value={selectDate}
         onChange={changeSelected}
       />

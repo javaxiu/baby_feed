@@ -1,7 +1,7 @@
 import { useMemoizedFn } from "ahooks";
 import { useState } from "react";
 import { isEqual, last } from "underscore";
-import { asyncPrompt } from "../../utils/prompt";
+import { asyncPrompt } from "./prompt";
 
 class DataBase<T extends Record<string, any>> {
   constructor(private storageKey: string, private initial: T[] = []) {
@@ -23,12 +23,12 @@ class DataBase<T extends Record<string, any>> {
     this.commit();
     return this.list;
   }
-  reload = () => {
+  reload() {
     try {
-      this.list = JSON.parse(localStorage.getItem(this.storageKey) || '[]')
+      this.list = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
     } catch {
-      this.list = this.list?.length ? this.list : this.initial;
     }
+    this.list = this.list?.length ? this.list : this.initial;
     return this.list;
   }
   get = () => {

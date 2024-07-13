@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client"
 import mamaMp3 from '../../assets/mama.mp3';
 import { Dialog } from "antd-mobile";
 import { last } from "underscore";
-import DataBase from "../../components/database";
+import DataBase from "../../utils/database";
 
 export const HOUR = 60 * 60 * 1000;
 export const MINUTE = 60 * 1000;

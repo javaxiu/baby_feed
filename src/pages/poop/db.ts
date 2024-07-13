@@ -1,4 +1,4 @@
-import DataBase from "../../components/database";
+import DataBase from "../../utils/database";
 
 export const Color = {
   "yellow": "黄色",

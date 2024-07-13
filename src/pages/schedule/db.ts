@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import DataBase from "../../components/database";
+import DataBase from "../../utils/database";
 
 export interface Schedule {
   date: number
