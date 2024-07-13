@@ -2,6 +2,9 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  --page-bg-r: 208;
+  --page-bg-g: 228;
+  --page-bg-b: 255;
 }
 * {
   padding: 0;
@@ -14,7 +17,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: radial-gradient(#d3e2f7, #d0e4ff);
+    background: rgb(var(--page-bg-r), var(--page-bg-g), var(--page-bg-b));
   }
   & {
     flex: 1;

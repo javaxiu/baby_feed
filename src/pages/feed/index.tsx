@@ -1,5 +1,5 @@
 import { useLocalStorageState } from 'ahooks';
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { last } from 'underscore';
 import { CurrentPrompt } from "./Current";
 import { LatestPrompt } from "./Lastest";

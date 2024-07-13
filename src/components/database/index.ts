@@ -27,7 +27,7 @@ class DataBase<T extends Record<string, any>> {
     try {
       this.list = JSON.parse(localStorage.getItem(this.storageKey) || '[]')
     } catch {
-      this.list = this.list || this.initial;
+      this.list = this.list?.length ? this.list : this.initial;
     }
     return this.list;
   }

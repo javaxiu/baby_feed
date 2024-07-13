@@ -1,4 +1,4 @@
-import { createRef, useCallback, useRef } from 'react';
+import { createRef, useCallback } from 'react';
 import poopGif from '../../assets/poop.gif';
 import { ButtomButton, Button } from '../../components/Button';
 import './index.scss';
