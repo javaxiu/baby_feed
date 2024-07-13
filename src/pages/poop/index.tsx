@@ -1,4 +1,4 @@
-import { createRef, useCallback } from 'react';
+import { createRef, useCallback, useMemo } from 'react';
 import poopGif from '../../assets/poop.gif';
 import { ButtomButton, Button } from '../../components/Button';
 import './index.scss';
@@ -90,6 +90,7 @@ export default () => {
     add({...data, time: Date.now()});
     return true;
   }, []);
+  const reverseList = useMemo(() => ([...list].reverse()), [list]);
   return (
     <div className='poop-page'>
       <img src={poopGif} />
@@ -97,7 +98,7 @@ export default () => {
         <div className='poop-page-list-mask'>
           <ol>
             {
-              list.reverse().map(item => (
+              reverseList.map(item => (
                 <li>
                   <div>
                     <div>{dayjs(item.time).format('MM-DD HH:mm')}</div>

@@ -43,7 +43,12 @@
       height: 100%;
       min-height: 200px;
       pointer-events: none;
-      background: linear-gradient(0deg, rgba(208, 228, 255, 1) 0%, rgba(208, 228, 255,.1) 15%, rgba(208, 228, 255,0) 100%);
+      background: linear-gradient(
+        0deg,
+        rgba(var(--page-bg-r), var(--page-bg-g), var(--page-bg-b), 1) 0%,
+        rgba(var(--page-bg-r), var(--page-bg-g), var(--page-bg-b),.1) 15%, 
+        rgba(var(--page-bg-r), var(--page-bg-g), var(--page-bg-b),0) 100%
+      );
     }
   }
   .lastest-prompt {
