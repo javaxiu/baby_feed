@@ -7,6 +7,7 @@ import poopGif from '../../assets/poop.gif';
 import { ButtomButton, Button } from '../../components/Button';
 import db, { Color, PoopRecord, Smell, Style } from './db';
 import './index.scss';
+import { asyncPrompt } from '../../utils/prompt';
 
 const formFields = [
   {
@@ -81,13 +82,19 @@ const createPrompt = () => {
   });
 }
 
+
 export default () => {
   const { list, add, remove } = db.useDataBaseList();
   const createRecord = useCallback(async () => {
     const data = await createPrompt();
     if (!data) return true;
-    add({...data, time: Date.now()});
+    add({...data, type: 'poop', time: Date.now()});
     return true;
+  }, []);
+  const creatRecordPee = useCallback(async () => {
+    const yes = await asyncPrompt({ title: "宝宝尿了哦?", confirmText: "是呀", cancelText: "你才尿了呢" });
+    if (!yes) return;
+    add({ type: 'pee', time: Date.now() } as any) 
   }, []);
   const reverseList = useMemo(() => ([...list].reverse()), [list]);
   return (
@@ -101,9 +108,17 @@ export default () => {
                 <li>
                   <div>
                     <div>{dayjs(item.time).format('MM-DD HH:mm')}</div>
-                    <div>{Color[item.color]}</div>
-                    <div>{Smell[item.smell]}</div>
-                    <div>{Style[item.style]}</div>
+                    {
+                      item.type === 'pee' ? (
+                        <div>放了一泡水</div>
+                      ) : (
+                        <>
+                        <div style={{ color: item.color }}>{Color[item.color]}</div>
+                        <div>{Smell[item.smell]}</div>
+                        <div>{Style[item.style]}</div>
+                        </>
+                      )
+                    }
                     <div onClick={() => remove(item)}>删除</div>
                   </div>
                 </li>
@@ -113,8 +128,9 @@ export default () => {
         </div>
       </div>
       
-      <ButtomButton className='buttom-button'>
-        <Button onClick={createRecord}>+</Button>
+      <ButtomButton className='poop-page-btns'>
+        <Button onClick={createRecord}>💩</Button>
+        <Button className='poop-page-btns-pee' onClick={creatRecordPee}>🍺</Button>
       </ButtomButton>
     </div>
   );

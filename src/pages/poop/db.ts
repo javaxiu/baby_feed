@@ -5,6 +5,7 @@ export const Color = {
   "brown": "棕色",
   "green": "绿色",
   "orange": "橙色",
+  "#9ACD32": "黄绿色",
 } as const;
 
 export const Smell = {
@@ -30,6 +31,7 @@ export const Style = {
 
 
 export interface PoopRecord {
+  type: 'pee' | 'poop'
   time: number
   color: keyof typeof Color
   smell: keyof typeof Smell,

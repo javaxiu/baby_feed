@@ -5,6 +5,7 @@ export const getTimesOfList = (times: number[], pad = false) => {
     padTimes = [...padTimes, Date.now()];
   }
   for (let i = 0; i < padTimes.length; i+=2) {
+    if (padTimes[i+1] === undefined) continue;
     volumn += padTimes[i+1] - padTimes[i]
   }
   return +(volumn / 60000).toFixed(2);
