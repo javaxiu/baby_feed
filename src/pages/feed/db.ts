@@ -34,10 +34,11 @@ export const feedDataBase = {
   delete(id: number) {
     feedDataBase.list = feedDataBase.list.filter(x => x.id !== id);
     localStorage.setItem('feed_records', JSON.stringify(feedDataBase.list))
-  }
+  },
 }
 
 export const ring = new class Ring {
+  nextNotifyTime = 0;
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
   init(navigate: Function) {
@@ -53,7 +54,6 @@ export const ring = new class Ring {
       this.check();
     }, 3000);
   }
-  nextNotifyTime = 0;
   feed() {
     this.nextNotifyTime = Date.now() + 2.8 * HOUR;
   }

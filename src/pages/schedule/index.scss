@@ -1,0 +1,38 @@
+.calendar-blk {
+  &-cal {
+    margin-top: 12px;
+  }
+  &-event-list {
+    margin: 60px 20px 0 20px;
+    list-style-position: inside;
+    font-size: 16px;
+    li {
+      font-weight: bold;
+    }
+  }
+  &-plus {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  &-plus &-today {
+    font-size: 18px;
+    position: absolute;
+    right: 12px;
+    --bg: #a6cbe7;
+    --size: 48px;
+  }
+}
+
+.dot {
+  --size: 6px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background-color: rgb(103, 20, 220);
+  position: relative;
+}
