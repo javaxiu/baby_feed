@@ -4,4 +4,54 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &-dialog {
+    --min-width: 90vw;
+    &-form {
+      &-radio {
+        --font-size: 14px;
+        &.color {
+          color: var(--value)
+        }
+      }
+    }
+  }
+
+  &-list {
+    font-size: 16px;
+    margin: 20px;
+    width: 100vw;
+    &-mask {
+      width: calc(100% - 30px);
+      margin: auto;
+      max-height: calc(100vh - 370px);
+      overflow-y: auto;
+      position: relative;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      min-height: 500px;
+      pointer-events: none;
+      background: linear-gradient(0deg, #fff 0%, rgba(255,255,255,.1) 15%, rgba(255,255,255,0) 100%);
+    }
+    ol {
+      margin-left: 30px;
+    }
+    li {
+      position: relative;
+      margin-bottom: 4px;
+      > div {
+        width: calc(100% - 60px);
+        display: inline-flex;
+        gap: 4px;
+        align-items: center;
+        & > div:nth-last-child(2) {
+          flex: 1;
+        }
+      }
+    }
+  } 
 }

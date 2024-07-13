@@ -1,14 +1,13 @@
 import DataBase from "../../components/database";
 
-const Color = {
+export const Color = {
   "yellow": "黄色",
   "brown": "棕色",
   "green": "绿色",
-  "black": "黑色",
   "orange": "橙色",
 } as const;
 
-const Smell = {
+export const Smell = {
   "sour": "酸的",
   "pungent": "刺鼻的",
   "rotten": "腐烂的",
@@ -17,7 +16,7 @@ const Smell = {
   "milky": "奶味的"
 } as const
 
-const style = {
+export const Style = {
   "soft": "软的",
   "firm": "硬的",
   "runny": "稀溏的",
@@ -34,7 +33,7 @@ export interface PoopRecord {
   time: number
   color: keyof typeof Color
   smell: keyof typeof Smell,
-  style: keyof typeof style,
+  style: keyof typeof Style,
 }
 
 export default new DataBase<PoopRecord>('poop', []);
