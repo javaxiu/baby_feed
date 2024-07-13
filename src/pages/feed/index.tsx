@@ -8,6 +8,24 @@ import StartBtn, { FeedAction } from "./StartBtn";
 import { FeedRecord, feedDataBase, ring } from "./db";
 import './index.scss';
 import { getTimesOfList } from "./utils";
+import { Dialog } from 'antd-mobile';
+
+
+const promptForSide = () => {
+  return new Promise((resolve) => {
+    Dialog.confirm({
+      title: '喂的哪一边嘛',
+      cancelText: "左边",
+      confirmText: "右边",
+      onConfirm() {
+        resolve('right');
+      },
+      onCancel() {
+        resolve('left');
+      }
+    })
+  });
+}
 
 export default () => {
   const [feed = FeedAction.none, setFeeding] = useLocalStorageState<FeedAction>(
@@ -21,16 +39,18 @@ export default () => {
   
   const [thisFeed = [], setThisFeed] = useLocalStorageState<number[]>('this-feed', {defaultValue: []});
 
-  const onSetFeeding = useCallback((state: FeedAction) => {
+  const onSetFeeding = useCallback(async (state: FeedAction) => {
     setFeeding(state);
     ring.feed();
     if (state === FeedAction.none) {
+      const side = await promptForSide();
       setFeedRecords(list => {
         const newRecord: FeedRecord = {
           id: Date.now(),
           times: thisFeed,
           type: 'mon',
-          volumn: getTimesOfList(thisFeed, true)
+          volumn: getTimesOfList(thisFeed, true),
+          side: side as any,
         };
         const newList: FeedRecord[] = [
           ...list || [],

@@ -13,6 +13,7 @@ export interface FeedRecord {
   times: number[]
   volumn: number
   type: 'mon' | 'milk'
+  side?: 'left' | 'right'
 }
 
 export const feedDataBase = {

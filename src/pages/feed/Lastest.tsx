@@ -42,6 +42,7 @@ export const LatestPrompt = ({ record, feedState }: { record?: FeedRecord, feedS
     <div className="lastest-prompt">
       <div>上次喂宝宝是 {lastTime.format('HH:mm')}</div>
       <div>距离上次喂奶已经 {passTime} 啦</div>
+      <div>上次喂的是 <b className='lastest-prompt-side'>{record.side === 'left' ? '左边' : '右边'}</b> 哦</div>
       <img src={image} />
       { ring.nextNotifyTime ? <div>下次提醒喂宝宝 {dayjs(ring.nextNotifyTime).format('HH:mm:ss')}</div> : null }
     </div>
