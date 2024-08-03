@@ -1,0 +1,29 @@
+.time-picker {
+  position: relative;
+  border: 1px solid rgba($color: #666, $alpha: .6);
+  border-radius: 4px;
+  height: 30px;
+  &-placeholder, &-value {
+    width: 100%;
+    height: 100%;
+    color: rgba($color: #000000, $alpha: 0.3);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    text-indent: .5em;
+  }
+  &-value {
+    color: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  input[type="time"] {
+    color: transparent;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+  }
+}

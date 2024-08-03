@@ -9,9 +9,14 @@ export const ButtomButton = ({ className, children }: { className?: string, chil
   )
 }
 
-export const Button = (props: { className?: string, onClick(): any, children: any }) => (
+export const Button = (props: {
+  className?: string,
+  border?: boolean,
+  onClick(): any,
+  children: any
+}) => (
   <div
-    className={classNames('circle-button', props.className)}
+    className={classNames('circle-button', { border: props.border }, props.className)}
     onClick={props.onClick}>
       {props.children}
   </div>

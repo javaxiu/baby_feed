@@ -8,6 +8,7 @@ import { ButtomButton, Button } from '../../components/Button';
 import db, { Color, PoopRecord, Smell, Style } from './db';
 import './index.scss';
 import { asyncPrompt } from '../../utils/prompt';
+import TimePicker from '../../components/TimePicker';
 
 const formFields = [
   {
@@ -92,7 +93,16 @@ export default () => {
     return true;
   }, []);
   const creatRecordPee = useCallback(async () => {
-    const yes = await asyncPrompt({ title: "宝宝尿了哦?", confirmText: "是呀", cancelText: "你才尿了呢" });
+    const yes = await asyncPrompt({
+      title: "宝宝尿了哦?",
+      content: (
+        <div>
+          <TimePicker />
+        </div>
+      ),
+      confirmText: "是呀",
+      cancelText: "你才尿了呢"
+    });
     if (!yes) return;
     add({ type: 'pee', time: Date.now() } as any) 
   }, []);
@@ -130,7 +140,7 @@ export default () => {
       
       <ButtomButton className='poop-page-btns'>
         <Button onClick={createRecord}>💩</Button>
-        <Button className='poop-page-btns-pee' onClick={creatRecordPee}>🍺</Button>
+        <Button className='poop-page-btns-pee' border onClick={creatRecordPee}>🍺</Button>
       </ButtomButton>
     </div>
   );
