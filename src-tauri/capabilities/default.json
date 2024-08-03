@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "path:default",
     "event:default",
@@ -12,6 +14,15 @@
     "resources:default",
     "menu:default",
     "tray:default",
-    "shell:allow-open"
+    "shell:allow-open",
+    "http:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "http://192.168.10.11:9000" },
+        { "url": "http://echo.free.beeceptor.com" }
+      ],
+      "deny": [{ "url": "https://private.tauri.app" }]
+    }
   ]
 }

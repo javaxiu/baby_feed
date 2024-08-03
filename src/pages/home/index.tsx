@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
-import { sum } from 'underscore';
 import feedGif from '../../assets/feed.gif';
 import scheduleDb from '../schedule/db';
 import './index.scss';
 import { feedDataBase } from '../feed/db';
 import { last } from 'underscore';
 import { getTimesOfList } from '../feed/utils';
+import { upload } from '../../utils/sync';
 
 
 const useEventNotice = () => {
@@ -41,7 +41,7 @@ const useEventNotice = () => {
 const useFeedCount = () => {
   return useMemo(() => {
     const today = dayjs();
-    const todayList = feedDataBase.list.filter(record => today.isSame(last(record.times), 'day'));
+    const todayList = feedDataBase.get().filter(record => today.isSame(last(record.times), 'day'));
     const totalTimes = todayList.reduce((prev, cur) => getTimesOfList(cur.times) + prev, 0).toFixed(2);
     // const todayLeft = todayList.filter(item => item.side === 'left').length;
     return <div>今天小满吃了 <b>{todayList.length}</b> 次, 一共 {totalTimes} 分钟啦</div>
@@ -54,7 +54,7 @@ export default () => {
   return (
     <div className='home-page'>
       <div>小满已经出生 {dayjs().diff(dayjs('2024-05-20'), 'day')} 天啦</div>
-      <div>妈妈们辛苦啦!</div>
+      <div onClick={upload}>妈妈们辛苦啦!</div>
       <img src={feedGif} />
       <div>{latestEventNotice}</div>
       <div>{feedNotice}</div>
