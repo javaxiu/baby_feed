@@ -22,13 +22,16 @@
     "@types/underscore": "^1.11.15",
     "ahooks": "^3.8.0",
     "antd-mobile": "^5.36.1",
+    "antd-mobile-icons": "^0.3.0",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.11",
+    "dexie": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.23.1",
     "react-router-dom": "^6.23.1",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.6",
+    "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "2.0.0-beta.22",

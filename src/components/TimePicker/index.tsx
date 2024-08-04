@@ -1,22 +1,48 @@
+import { forwardRef, useCallback, useImperativeHandle, memo, useState } from 'react';
+import { CloseOutline } from 'antd-mobile-icons'
 import dayjs from 'dayjs';
 import './index.scss';
-import { useState } from 'react';
+import classNames from 'classnames';
 
 interface Props {
+  border?: boolean
   placeholder?: string
+  value?: number,
+  onChange?(t: number): void
 }
 
-const TimePicker = ({
+export interface TimePickerRef {
+  getValue(): number
+}
+
+const TimePicker = forwardRef<TimePickerRef, Props>(({
+  border,
   placeholder = '啥时候',
-}: Props) => {
-  const [value, setValue] = useState<string | undefined>();
+  value,
+  onChange,
+}: Props, ref) => {
+  useImperativeHandle(ref, () => ({
+    getValue() {
+      return value || Date.now();
+    }
+  }));
+  const [localValue, setLocalValue] = useState<number>();
+  const onValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    let d = dayjs();
+    const [hour, min] = e.target.value.split(':').map(Number);
+    d = d.hour(hour).minute(min);
+    setLocalValue(+d);
+    onChange?.(+d);
+  }, []);
+  const strVal = localValue ? dayjs(localValue).format('HH:mm') : '';
   return (
-    <div className="time-picker">
-      <input type="time" value={value} onChange={v => setValue(v.target.value)}/>
-      <div className='time-picker-placeholder'>{value ? '' : placeholder}</div>
-      <div className='time-picker-value'>{value || ''}</div>
+    <div className={classNames("time-picker", { border })}>
+      <input type="time" value={strVal} onChange={onValueChange}/>
+      <div className='time-picker-placeholder'>{localValue ? '' : placeholder}</div>
+      <div className='time-picker-value'>{strVal || ''}</div>
+      <CloseOutline className={classNames('time-picker-clear', {show: localValue})} onClick={() => setLocalValue(0)}/>
     </div>
   )
-}
+})
 
-export default TimePicker;
+export default memo(TimePicker);

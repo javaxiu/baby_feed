@@ -59,4 +59,12 @@
       color: crimson;
     }
   }
+  &-add.circle-button {
+    font-size: 24px;
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    --bg: #a6cbe7;
+    --size: 48px;
+  }
 }

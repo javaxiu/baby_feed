@@ -1,4 +1,4 @@
-import { Dialog, Form, Radio, Space } from 'antd-mobile';
+import { Dialog, Form, Input, Radio, Space } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -8,7 +8,7 @@ import { ButtomButton, Button } from '../../components/Button';
 import db, { Color, PoopRecord, Smell, Style } from './db';
 import './index.scss';
 import { asyncPrompt } from '../../utils/prompt';
-import TimePicker from '../../components/TimePicker';
+import TimePicker, { TimePickerRef } from '../../components/TimePicker';
 
 const formFields = [
   {
@@ -73,6 +73,12 @@ const createPrompt = () => {
               </Form.Item>
             ))
           }
+          <Form.Item name="time" label="时间">
+            <TimePicker placeholder='啥时候拉的(不填就是现在)' />
+          </Form.Item>
+          <Form.Item name="remark" label="备注">
+            <Input placeholder='战况如何'/>
+          </Form.Item>
         </Form>
       ),
       actions: [[
@@ -93,18 +99,19 @@ export default () => {
     return true;
   }, []);
   const creatRecordPee = useCallback(async () => {
+    const ref = createRef<TimePickerRef>();
     const yes = await asyncPrompt({
       title: "宝宝尿了哦?",
       content: (
         <div>
-          <TimePicker />
+          <TimePicker ref={ref} placeholder='啥时候尿的嘛' border/>
         </div>
       ),
       confirmText: "是呀",
       cancelText: "你才尿了呢"
     });
     if (!yes) return;
-    add({ type: 'pee', time: Date.now() } as any) 
+    add({ type: 'pee', time: ref.current!.getValue() } as any) 
   }, []);
   const reverseList = useMemo(() => ([...list].reverse()), [list]);
   return (

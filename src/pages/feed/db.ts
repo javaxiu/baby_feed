@@ -3,18 +3,27 @@ import { createRef } from "react"
 import ReactDOM from "react-dom/client"
 import mamaMp3 from '../../assets/mama.mp3';
 import { Dialog } from "antd-mobile";
-import { last } from "underscore";
 import DataBase from "../../utils/database";
+import { HOUR, MINUTE } from "../../utils/helpers";
 
-export const HOUR = 60 * 60 * 1000;
-export const MINUTE = 60 * 1000;
-
-export interface FeedRecord {
+export interface FeedRecordOld {
   id: number
   times: number[]
   volumn: number
   type: 'mon' | 'milk'
   side?: 'left' | 'right'
+  left?: number[];
+  right?: number[];
+}
+
+export interface FeedRecord {
+  id: number
+  timestamp: number,
+  type?: 'mon' | 'milk'
+  left?: number;
+  right?: number;
+  stop: number;
+  volumn: number
 }
 
 export const feedDataBase = new DataBase<FeedRecord>('feed_records');
@@ -23,9 +32,10 @@ export const ring = new class Ring {
   nextNotifyTime = 0;
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
-  init(navigate: Function) {
+  async init(navigate: Function) {
+    await feedDataBase.reload();
     this.navigate = navigate;
-    this.nextNotifyTime = last(feedDataBase.latest()?.times || []) || 0;
+    this.nextNotifyTime = feedDataBase.latest()?.stop || 0;
     this.nextNotifyTime += 2.8 * HOUR;
     const container = document.createElement('div');
     document.body.append(container);

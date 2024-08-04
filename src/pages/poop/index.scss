@@ -8,6 +8,8 @@
   &-dialog {
     --min-width: 90vw;
     &-form {
+      max-height: calc(100vh - 400px);
+      overflow-y: auto;
       &-radio {
         --font-size: 14px;
         &.color {

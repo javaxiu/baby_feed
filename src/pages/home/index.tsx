@@ -41,8 +41,8 @@ const useEventNotice = () => {
 const useFeedCount = () => {
   return useMemo(() => {
     const today = dayjs();
-    const todayList = feedDataBase.get().filter(record => today.isSame(last(record.times), 'day'));
-    const totalTimes = todayList.reduce((prev, cur) => getTimesOfList(cur.times) + prev, 0).toFixed(2);
+    const todayList = feedDataBase.get().filter(record => today.isSame(last(record.left || record.right || []), 'day'));
+    const totalTimes = todayList.reduce((prev, cur) => getTimesOfList(cur.left || cur.right || []) + prev, 0).toFixed(2);
     // const todayLeft = todayList.filter(item => item.side === 'left').length;
     return <div>今天小满吃了 <b>{todayList.length}</b> 次, 一共 {totalTimes} 分钟啦</div>
   }, [])
