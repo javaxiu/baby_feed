@@ -36,7 +36,7 @@ class DataBase<T extends Record<string, any>> {
   }
   async reload() {
     try {
-      this.list = await this.table.toArray();
+      this.list = await this.table.orderBy('timestamp').toArray();
     } catch {
     }
     this.list = this.list?.length ? this.list : this.initial;

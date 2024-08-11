@@ -2,47 +2,21 @@ import { useLocalStorageState } from 'ahooks';
 import { Form, Input } from 'antd-mobile';
 import { FormInstance } from 'antd-mobile/es/components/form';
 import { createRef, useCallback } from "react";
-import { last } from 'underscore';
 import { Button } from '../../components/Button';
 import TimePicker from '../../components/TimePicker';
 import { asyncPrompt } from '../../utils/prompt';
-import { CurrentPrompt } from "./Current";
-import { LatestPrompt } from "./Lastest";
 import { RecordList } from "./RecordList";
-import StartBtn, { FeedAction } from "./StartBtn";
-import { FeedRecord, feedDataBase, ring } from "./db";
+import { FeedAction } from "./StartBtn";
+import { feedDataBase } from "./db";
 import './index.scss';
-import { getTimesOfList } from "./utils";
 import FeedControl from './FeedBtn';
 import { MINUTE } from '../../utils/helpers';
+import { LatestPrompt } from './Lastest';
 
 
 export default () => {
   const { list, add, refresh } = feedDataBase.useDataBaseList();
-
-  const [feed = FeedAction.none, setFeeding] = useLocalStorageState<FeedAction>(
-    'this-feed-state',
-    {defaultValue: FeedAction.none}
-  );
-
-  // const onSetFeeding = useCallback(async (state: FeedAction) => {
-  //   setFeeding(state);
-  //   ring.feed();
-  //   if (state === FeedAction.none) {
-  //     const side = await promptForSide();
-  //     const newRecord: FeedRecord = {
-  //       id: Date.now(),
-  //       times: thisFeed,
-  //       type: 'mon',
-  //       volumn: getTimesOfList(thisFeed, true),
-  //       side: side as any,
-  //     };
-  //     add(newRecord);
-  //     setThisFeed([]);
-  //   } else {
-  //     setThisFeed(list => ([...(list || []), Date.now()]));
-  //   }   
-  // }, [thisFeed]);
+  const [ page, setPage ] = useLocalStorageState('feed-page', { defaultValue: 'none' });
 
   const addRecord = useCallback(async () => {
     const ref = createRef<FormInstance>();
@@ -76,23 +50,17 @@ export default () => {
   }, []);
 
   return (
-    <FeedControl />
+    <div className="feed-page">
+      {
+        page === 'none' ? (
+          <>
+            <RecordList records={list} refresh={refresh}/>
+            <LatestPrompt />
+          </>
+        ) : null
+      }
+      <FeedControl />
+      <Button onClick={addRecord} className='feed-page-add'>+</Button>
+    </div>
   )
-
-  // return (
-  //   <div className="feed-page">
-  //     {
-  //       feed === FeedAction.none ? (
-  //         <>
-  //           <RecordList records={list} refresh={refresh}/>
-  //           <LatestPrompt record={last(list)!} feedState={feed}/>
-  //         </>
-  //       ) : (
-  //         <CurrentPrompt times={thisFeed} feedState={feed}/>
-  //       )
-  //     }
-  //     <StartBtn onChange={onSetFeeding} value={feed}/>
-  //     <Button onClick={addRecord} className='feed-page-add'>+</Button>
-  //   </div>
-  // )
 }

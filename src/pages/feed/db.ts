@@ -33,6 +33,9 @@ export const ring = new class Ring {
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
   async init(navigate: Function) {
+    if (location.hostname.startsWith('192')) {
+      return;
+    }
     await feedDataBase.reload();
     this.navigate = navigate;
     this.nextNotifyTime = feedDataBase.latest()?.stop || 0;

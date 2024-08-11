@@ -29,3 +29,13 @@
     --bg: transparent;
   }
 }
+
+.square-button {
+  background: linear-gradient(to right, #FF00FF, #FFC0CB);
+  text-align: center;
+  line-height: 32px;
+  border-radius: 50px;
+  color: #fff;
+  display: inline-block;
+  padding: 0 24px;
+}

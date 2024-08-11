@@ -1,82 +1,121 @@
 import { PlayOutline } from "antd-mobile-icons";
 import Pause from './pause.svg?react';
 import './index.scss';
-import { createElement, forwardRef, memo, useCallback, useEffect, useState } from "react";
+import { createElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { msFormat } from "../../../utils/helpers";
-import { useLocalStorageState, useMemoizedFn } from "ahooks";
+import { useLatest, useLocalStorageState, useMemoizedFn } from "ahooks";
+import { getTimesOfList } from "../utils";
+import { Button } from "@components/Button";
+import { feedDataBase } from "src/pages/feed/db";
+import { feedSignal, useFeedSignalChange } from "./signal";
 
 interface Props {
-  id: string;
+  id: 'left' | 'right';
   title: string;
-  going: boolean;
   onChangeTime(key: string, n: number): void;
-  onChangeState(key: string, going: boolean): void
 }
 
 const FeedBtn = memo((props: Props) => {
-  const [second = 0, setSecond] = useLocalStorageState<number>(`feed-${props.id}-start`, { defaultValue: 0 });
+  const [times, setTimes] = useLocalStorageState<number[]>(`feed-${props.id}-times`, { defaultValue: [] });
+  const timesRef = useLatest(times);
+  const [seconds, setSeconds] = useState(0);
+  const isFirst = useRef(true);
+  const isGoing = useLatest(feedSignal.get() === props.id);
 
   const onClick = useCallback(() => {
-    props.onChangeState(props.id, !props.going)
-  }, [props.onChangeState, props.going]);
+    const cur = feedSignal.get();
+    if (cur === props.id) {
+      feedSignal.set('pause');
+    } else {
+      feedSignal.set(props.id);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!props.going) return;
-    const timer = setInterval(() => {
-      setSecond(t => {
-        const next = (t || 0) + 1;
-        props.onChangeTime(props.id, next);
-        return next;
-      });
-    }, 1000);
+    setTimes(l => {
+      if (isFirst.current) {
+        isFirst.current = false
+        return l || [];
+      }
+      return [...(l || []), Date.now()]
+    });
+  }, [isGoing]);
+
+  useEffect(() => {
+    let timer = 0;
+    const refresh = () => {
+      if (isGoing.current) {
+        const t = (getTimesOfList(timesRef.current, true, true) || 0);
+        setSeconds(t);
+        props.onChangeTime(props.id, t);
+      }
+      timer = setTimeout(refresh, 1000);
+    }
+    refresh();
     return () => clearInterval(timer);
-  }, [props.going])
+  }, [])
+
+  useFeedSignalChange('finish', () => {
+    setTimes([]);
+  });
 
   return (
-    <div className={classNames("feed-btn", { active: props.going })}>
+    <div className={classNames("feed-btn", { active: isGoing.current })} onClick={onClick}>
       <div className="feed-btn-title">{props.title}</div>
-      {createElement(props.going ? Pause : PlayOutline, {
+      {createElement(isGoing.current ? Pause : PlayOutline, {
         className: 'feed-btn-icon',
-        onClick,
       })}
-      <div className="feed-btn-time">{msFormat(second * 1000)}</div>
+      <div className="feed-btn-time">{msFormat(seconds)}</div>
     </div>
   )
-})
+});
+FeedBtn.displayName = 'FeedBtn';
 
-interface FeedControlProps {
-
-}
-
-const FeedControl = forwardRef(() => {
-  const [status, setStatus] = useLocalStorageState<'left' | 'right' | 'none'>('feed-control', { defaultValue: 'none' });
-  const [times, setTimes] = useState([0, 0]);
-
-  const onChangeState = useMemoizedFn((key: 'left' | 'right', going: boolean) => {
-    if (going) {
-      setStatus(key)
-    } else {
-      setStatus('none');
-    }
-  });
+const FeedControl = () => {
+  const [times, setTimes] = useState<[number, number]>([0, 0]);
+  const { add } = feedDataBase.useDataBaseList();
 
   const onChangeTime = useMemoizedFn((key: string, t: number) => {
     setTimes(times => key == 'left' ? [t, times[1]] : [times[0], t]);
   });
 
+  const reset = useCallback(() => {
+    feedSignal.set('finish');
+    setTimes([0, 0]);
+  }, []);
+
+  const onClickDone = useCallback(() => {
+    add({
+      id: Date.now(),
+      timestamp: Date.now(),
+      left: times[0],
+      right: times[1],
+      stop: Date.now(),
+      volumn: times[0] + times[1],
+    });
+    reset();
+  }, [times]);
+
   return (
     <div className="feed-control">
       <div className="feed-control-total">
-        <b>{msFormat((times[0] + times[1]) * 1000)}</b>
+        <b>{msFormat((times[0] + times[1]))}</b>
         <div>一共喂了</div>
       </div>
       <div className="feed-btn-group">
-        <FeedBtn title="左边" id="left" going={status === 'left'} onChangeState={onChangeState} onChangeTime={onChangeTime} />
-        <FeedBtn title="右边" id="right" going={status === 'right'}  onChangeState={onChangeState} onChangeTime={onChangeTime} />
+        <FeedBtn title="左边" id="left" onChangeTime={onChangeTime} />
+        <FeedBtn title="右边" id="right" onChangeTime={onChangeTime} />
       </div>
+      {
+        times.filter(Boolean).length === 0 ? null : (
+          <div className="feed-control-bottom">
+            <Button type="square" onClick={onClickDone}>喂饱啦</Button>
+          </div>
+        )
+      }
     </div>
   )
-});
+};
 
 export default FeedControl;
