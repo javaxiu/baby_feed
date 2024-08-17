@@ -4,7 +4,7 @@ import { feedDataBase } from "./db";
 import { msFormat } from "@utils/helpers";
 
 export const RecordList = () => {
-  const list = feedDataBase.useDataBaseRange();
+  const list = feedDataBase.useDataBaseRange({ n: 2, unit: 'day' });
 
   const onDelete = useCallback((e: React.MouseEvent) => {
     const id = e.currentTarget.parentElement?.parentElement?.dataset.id;

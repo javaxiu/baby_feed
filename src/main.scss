@@ -9,6 +9,16 @@
   --page-bg-r: 241;
   --page-bg-g: 244;
   --page-bg-b: 248;
+  --text-color: #333;
+  color: var(--text-color);
+  &.night-mode {
+    filter: brightness(0.8) contrast(1.2);
+    --page-bg-r: 126;
+    --page-bg-g: 126;
+    --page-bg-b: 126;
+    --text-color: #f0f0f0;
+    color: var(--text-color);
+  }
 }
 * {
   padding: 0;
@@ -26,12 +36,14 @@
   & {
     flex: 1;
     position: relative;
+    overflow-y: auto;
   }
   &-navigation {
     display: flex;
     flex-direction: row;
     height: 64px;
     justify-content: space-between;
+    flex-shrink: 0;
     &-btn {
       flex: 1;
       height: 100%;

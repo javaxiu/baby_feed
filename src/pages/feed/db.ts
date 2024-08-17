@@ -9,7 +9,7 @@ import { HOUR, MINUTE } from "../../utils/helpers";
 export interface FeedRecordOld {
   id: number
   times: number[]
-  volume: number
+  volumn: number
   type: 'mon' | 'milk'
   side?: 'left' | 'right'
   left?: number[];
@@ -36,10 +36,9 @@ export const ring = new class Ring {
     if (location.hostname.startsWith('localhost') || location.hostname.startsWith('192')) {
       return;
     }
-    await feedDataBase.reload();
+    const latest = await feedDataBase.latest();
     this.navigate = navigate;
-    this.nextNotifyTime = feedDataBase.latest()?.stop || 0;
-    this.nextNotifyTime += 2.8 * HOUR;
+    this.nextNotifyTime = latest[0].timestamps + 2.8 * HOUR;
     const container = document.createElement('div');
     document.body.append(container);
     ReactDOM.createRoot(container).render(React.createElement('audio', {

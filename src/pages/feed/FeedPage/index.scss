@@ -1,9 +1,11 @@
+@mixin feed-btn-style($color) {
+  border: 2px dashed lighten($color, 20%);
+  background-color: lighten($color, 42%);
+}
+
 .feed-btn {
   --size: 80px;
-  --background-color: rgb(128,128,128);
   border-radius: 50%;
-  border: 2px dashed color-mix(in srgb, var(--background-color) 80%, #FFFFFF);
-  background-color: color-mix(in srgb, var(--background-color) 20%, #FFFFFF);
   width: var(--size);
   height: var(--size);
   display: flex;
@@ -11,8 +13,10 @@
   justify-content: center;
   align-items: center;
   gap: 3px;
+  color: #000;
+  @include feed-btn-style( rgb(128,128,128));
   &.active {
-    --background-color: red;
+    @include feed-btn-style(red);
   }
   &-icon {
     font-size: 20px;

@@ -10,6 +10,7 @@
 }
 .circle-button {
   --size: 64px;
+  --bg: rgb(246, 111, 151);
   background-color: var(--bg);
   border-radius: 50%;
   width: var(--size);

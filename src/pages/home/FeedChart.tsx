@@ -19,6 +19,7 @@ const FeedChart = () => {
   const list = feedDataBase.useDataBaseRange(range as Range, (rangeList) => {
     return {
       volume: rangeList.reduce((pre, cur) => pre + cur.volume, 0),
+      count: rangeList.length,
     }
   });
 
@@ -30,11 +31,14 @@ const FeedChart = () => {
     const el = (
       // @ts-ignore
       <Canvas context={context} pixelRatio={window.devicePixelRatio}>
-        <Chart data={list}>
+        <Chart data={list.reverse()}>
           <Axis field="timestamps" tickCount={5} formatter={v => dayjs(v).format(timeFmt)} />
-          <Axis field="volume" formatter={v => Math.ceil(v / MINUTE)}/>
+          <Axis field="volume" position="right" formatter={v => Math.ceil(v / MINUTE)}/>
+          <Axis field="count"/>
           <Line x="timestamps" y="volume" />
           <Point x="timestamps" y="volume" />
+          <Line x="timestamps" y="count" color="green"/>
+          <Point x="timestamps" y="count" color="green"/>
         </Chart>
       </Canvas>
     )

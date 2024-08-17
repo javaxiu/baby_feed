@@ -7,7 +7,7 @@ import classNames from 'classnames';
 interface Props {
   border?: boolean
   placeholder?: string
-  value?: number,
+  // value?: number,
   onChange?(t: number): void
 }
 
@@ -18,12 +18,11 @@ export interface TimePickerRef {
 const TimePicker = forwardRef<TimePickerRef, Props>(({
   border,
   placeholder = '啥时候',
-  value,
   onChange,
 }: Props, ref) => {
   useImperativeHandle(ref, () => ({
     getValue() {
-      return value || Date.now();
+      return localValue || Date.now();
     }
   }));
   const [localValue, setLocalValue] = useState<number>();

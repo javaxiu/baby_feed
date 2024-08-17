@@ -5,6 +5,7 @@ import { BottomButton, Button } from '../../components/Button';
 import '../../main.scss';
 import db, { Schedule as ScheduleItem } from './db';
 import './index.scss';
+import { ID_TS_FMT } from '@utils/helpers';
 
 const dot = <div className='dot'></div>
 
@@ -52,7 +53,12 @@ const Schedule = () => {
           Toast.show({ content: '啥都没填呀', });
           return Promise.reject();
         }
-        add({ date: +selectedDayjs, event: val })
+        add({
+          id: dayjs().format(ID_TS_FMT),
+          timestamps: +selectedDayjs,
+          date: +selectedDayjs,
+          event: val
+        })
       }
     });
   }, [selectedDayjs]);
@@ -88,7 +94,7 @@ const Schedule = () => {
             return <li>
               <div>
                 <span>{event.event}</span>
-                <span onClick={() => remove(event)}>删除</span>
+                <span onClick={() => remove(event as any)}>删除</span>
               </div>
             </li>
           })

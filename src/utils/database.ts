@@ -1,6 +1,5 @@
 import { useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
-import { last } from "underscore";
 import Dexie, { Table } from 'dexie';
 import { asyncPrompt } from "./prompt";
 import dayjs from "dayjs";
@@ -8,9 +7,10 @@ import mitt from "mitt";
 import _ from "underscore";
 
 
-export const indexDb = new Dexie("MyDatabase");
+export const indexDb = new Dexie("MyDatabase3");
 
 export type Range = 'day' | 'week' | 'month';
+type CustomRange = { n: number, unit: Range };
 
 window.onbeforeunload = () => {
   indexDb.close();
@@ -67,7 +67,7 @@ class DataBase<T extends Record<string, any>> {
   }
 
   latest = () => {
-    return last(this.list);
+    return this.table.orderBy('timestamps').reverse().limit(1).toArray();
   }
 
   useDataBaseList = () => {
@@ -92,14 +92,20 @@ class DataBase<T extends Record<string, any>> {
     }
   }
 
-  useDataBaseRange: IUseDataBaseRange<T> = (range: Range = 'day', groupBy?: (rangeList: T[]) => any) => {
+  useDataBaseRange: IUseDataBaseRange<T> = (range: Range | CustomRange = 'day', groupBy?: (rangeList: T[]) => any) => {
     const [list, setList] = useState<WithBasicInfo<T>[]>([]);
     const refresh = useMemoizedFn(() => {
-      const start = +dayjs().subtract(1, range).endOf('day');
+      let back = 1;
+      let unit: Range = range as any;
+      if (typeof range !== 'string') {
+        back = range.n;
+        unit = range.unit;
+      }
+      const start = +dayjs().subtract(back, unit).endOf('day');
       const end = +dayjs();
       this.table.where("timestamps").between(start, end).reverse().sortBy('timestamps').then(resp => {
         if (groupBy) {
-          const fmt = ({'day': 'minute', 'week': 'day', 'month': 'day'} as const)[range];
+          const fmt = ({'day': 'minute', 'week': 'day', 'month': 'day'} as const)[unit];
           const groupList = _.groupBy(resp, item => String(dayjs(item.timestamps).startOf(fmt).format()));
           const newList = Object.keys(groupList).map(groupTime => {
             return {
@@ -127,8 +133,8 @@ class DataBase<T extends Record<string, any>> {
 }
 
 interface IUseDataBaseRange<T> {
-  <U>(range: Range, groupBy?: (rangeList: T[]) => U): (U & WithBasicInfo<T>)[]
-  (range?: Range): T[],
+  <U>(range: Range | CustomRange, groupBy?: (rangeList: T[]) => U): (U & WithBasicInfo<T>)[]
+  (range?: Range | CustomRange): WithBasicInfo<T>[],
 }
 
 export default DataBase;

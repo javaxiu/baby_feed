@@ -2,7 +2,7 @@ import drinkingGif from '@assets/drinking.gif';
 import drinkingPauseGif from '@assets/drinking_pause.gif';
 import { Button } from "@components/Button";
 import TimePicker from '@components/TimePicker';
-import { MINUTE, msFormat } from '@utils/helpers';
+import { ID_TS_FMT, MINUTE, msFormat } from '@utils/helpers';
 import { asyncPrompt } from '@utils/prompt';
 import { useMemoizedFn } from "ahooks";
 import { Form, Input } from 'antd-mobile';
@@ -30,8 +30,8 @@ const FeedControl = () => {
   const onClickDone = useCallback(() => {
     const now = dayjs();
     feedDataBase.add({
-      id: now.format('YYYY_MM_DD_HH_mm_ss_SSS'),
-      timestamps: +now,
+      id: now.format(ID_TS_FMT),
+      timestamps: +now - times[0] - times[1],
       left: times[0],
       right: times[1],
       stop: +now,

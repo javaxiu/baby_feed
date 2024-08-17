@@ -1,14 +1,15 @@
+import poopGif from '@assets/poop.gif';
+import { BottomButton, Button, ButtonGroup } from '@components/Button';
+import TimePicker, { TimePickerRef } from '@components/TimePicker';
+import { asyncPrompt } from '@utils/prompt';
 import { Dialog, Form, Input, Radio, Space } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { createRef, useCallback } from 'react';
-import poopGif from '../../assets/poop.gif';
-import { BottomButton, Button, ButtonGroup } from '../../components/Button';
-import db, { Color, PoopRecord, PeepRecord, Smell, Style } from './db';
+import db, { Color, PoopRecord, Smell, Style } from './db';
 import './index.scss';
-import { asyncPrompt } from '../../utils/prompt';
-import TimePicker, { TimePickerRef } from '../../components/TimePicker';
+import { ID_TS_FMT } from '@utils/helpers';
 
 const formFields = [
   {
@@ -91,13 +92,15 @@ const createPrompt = () => {
 
 
 export default () => {
-  const { list } = db.useDataBaseList();
+  const list = db.useDataBaseRange({ n: 3, unit: 'day' });
+
   const createRecord = useCallback(async () => {
     const data = await createPrompt();
     if (!data) return true;
-    db.add({...data, id: Date.now(), timestamps: data.time || Date.now(), type: 'poop' });
+    db.add({...data, id: dayjs(data.time).format(ID_TS_FMT), timestamps: data.time || Date.now(), type: 'poop' });
     return true;
   }, []);
+
   const createRecordPee = useCallback(async () => {
     const ref = createRef<TimePickerRef>();
     const yes = await asyncPrompt({

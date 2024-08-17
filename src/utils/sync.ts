@@ -7,7 +7,7 @@ import { Toast } from 'antd-mobile';
 import { last } from 'underscore';
 import { MINUTE, getTimesOfList } from '@utils/helpers';
 import { indexDb } from './database';
-import { sleep } from './helpers';
+import { sleep, ID_TS_FMT } from './helpers';
 import dayjs from 'dayjs';
 
 export const upload = async () => {
@@ -17,7 +17,7 @@ export const upload = async () => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      feed: feedDataBase.get(),
+      feed: localStorage.getItem('feed_records'),
       schedule: scheduleDb.get(),
       poop: poopDb.get(),
     }),
@@ -29,6 +29,7 @@ export const upload = async () => {
   Toast.show(typeof r === 'string' ? r : JSON.stringify(r));
 }
 
+// @ts-ignore
 const mock = async () => {
   await indexedDB.deleteDatabase('MyDatabase');
   localStorage.removeItem('feed_records');
@@ -38,7 +39,7 @@ const mock = async () => {
   while (+start < now) {
     const v = ~~(Math.random() * 15 * MINUTE);
     list.push({
-      id: start.format('YYYY_MM_DD_HH_mm_ss_SSS'),
+      id: start.format(ID_TS_FMT),
       times: [+start, +start + v],
       volumn: v,
       side: 'left',
@@ -55,37 +56,39 @@ const mock = async () => {
 
   if ((await feedDataBase.reload()).length === 0) {
     const list: FeedRecordOld[] = JSON.parse(localStorage.getItem('feed_records') || '[]')
-    feedDataBase.table.bulkAdd(list.map(x => ({
-      id: x.id,
-      timestamps: last(x.times) || 0,
-      type: x.type,
-      ...(() => {
-        const t = getTimesOfList(x.times, false, true);
-        return {
-          left: t / 2,
-          right: t / 2,
-          stop: (last(x.times) || 0) + t,
-        };
-      })(),
-      volume: x.volumn,
-    })));
+    feedDataBase.table.bulkAdd(list.map(x => {
+      const volume = getTimesOfList(x.times, false, true);
+      return {
+        id: dayjs(x.id).format(ID_TS_FMT),
+        timestamps: x.times[0] || 0,
+        type: x.type,
+        left: volume / 2,
+        right: volume / 2,
+        stop: last(x.times)!,
+        volume,
+      }
+    }));
   }
 
+  // @ts-ignore
   if (await indexDb.poop.count() === 0) {
-    const list2 = JSON.parse(localStorage.getItem('poop') || '[]').map(x => ({
+    const list2 = JSON.parse(localStorage.getItem('poop') || '[]').map((x: any) => ({
       id: x.id || x.time,
       timestamps: x.time,
       ...x,
     }));
+    // @ts-ignore
     indexDb.poop.bulkAdd(list2);
   }
   
+  // @ts-ignore
   if (await indexDb.schedule.count() === 0) {
-    const list3 = JSON.parse(localStorage.getItem('schedule') || '[]').map(x => ({
+    const list3 = JSON.parse(localStorage.getItem('schedule') || '[]').map((x: any) => ({
       id: x.date,
       timestamps: x.date,
       ...x,
     }));
+    // @ts-ignore
     indexDb.schedule.bulkAdd(list3);
   }
 
