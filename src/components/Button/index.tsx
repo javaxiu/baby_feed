@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import './index.scss';
 
-export const ButtomButton = ({ className, children }: { className?: string, children: any }) => {
+export const BottomButton = ({ className, children }: { className?: string, children: any }) => {
   return (
     <div className={classNames('bottom-button', className)}>
       {children}
@@ -26,3 +26,11 @@ export const Button = (props: {
       {props.children}
   </div>
 )
+
+export const ButtonGroup = (props: {children: any}) => {
+  return (
+    <div className='button-group'>
+      {props.children}
+    </div>
+  )
+}

@@ -13,6 +13,7 @@ import { useCallback, useEffect } from "react";
 import classnames from 'classnames';
 import { ring } from "./pages/feed/db";
 import './main.scss';
+import '@utils/sync';
 
 const HomePage = () => {
   const current = useLocation()?.pathname || 'home';

@@ -30,12 +30,17 @@ export const Style = {
 } as const
 
 
-export interface PoopRecord {
-  type: 'pee' | 'poop'
+export type PoopRecord = {
+  type: 'poop'
   time: number
   color: keyof typeof Color
   smell: keyof typeof Smell,
   style: keyof typeof Style,
 }
 
-export default new DataBase<PoopRecord>('poop', []);
+export type PeepRecord = {
+  type: 'pee',
+  time: number,
+}
+
+export default new DataBase<PoopRecord | PeepRecord>('poop', []);

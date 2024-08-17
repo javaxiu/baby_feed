@@ -1,31 +1,28 @@
-import { Dialog } from "antd-mobile";
 import dayjs from "dayjs";
 import { useCallback } from "react";
-import { last } from "underscore";
-import { FeedRecord, feedDataBase } from "./db";
+import { feedDataBase } from "./db";
+import { msFormat } from "@utils/helpers";
 
-export const RecordList = ({ records, refresh }: { records: FeedRecord[], refresh(): void }) => {
+export const RecordList = () => {
+  const list = feedDataBase.useDataBaseRange();
+
   const onDelete = useCallback((e: React.MouseEvent) => {
-    const id = Number(e.currentTarget.parentElement?.parentElement?.dataset.id);
-    Dialog.confirm({
-      content: '要删掉吗'+id,
-      onConfirm: async () => {
-        feedDataBase.remove(records.find(r => r.id === id)!);
-        refresh();
-      },
-    })
-  }, [records]);
+    const id = e.currentTarget.parentElement?.parentElement?.dataset.id;
+    feedDataBase.remove(list.find(r => r.id === id)!);
+  }, [list]);
+
   return (
     <div className="feed-list">
       <div>宝宝吃饭笔记</div>
       <ul>
         {
-          [...records].reverse().map((r, i) => (
+          list.map((r, i) => (
             <li key={i} data-id={r.id}>
               <div>        
-                <span>{dayjs(last(r.times)).format('YYYY-MM-DD HH:mm')}</span>
-                <span>{{'mon': '母乳', 'milk': '牛奶'}[r.type]}</span>
-                <span>{r.volumn} {{'mon': '分钟', 'milk': '毫升'}[r.type]}</span>
+                <span>{dayjs(r.timestamps).format('MM-DD HH:mm')}</span>
+                <span>共:{msFormat(r.volume || 0)}</span>
+                <span>左:{msFormat(r.left || 0)}</span>
+                <span>右:{msFormat(r.right || 0)}</span>
               </div>
               <div>
                 <span onClick={onDelete}>删除</span>

@@ -9,7 +9,7 @@ import { HOUR, MINUTE } from "../../utils/helpers";
 export interface FeedRecordOld {
   id: number
   times: number[]
-  volumn: number
+  volume: number
   type: 'mon' | 'milk'
   side?: 'left' | 'right'
   left?: number[];
@@ -17,13 +17,13 @@ export interface FeedRecordOld {
 }
 
 export interface FeedRecord {
-  id: number
-  timestamp: number,
+  id: number | string
+  timestamps: number,
   type?: 'mon' | 'milk'
   left?: number;
   right?: number;
   stop: number;
-  volumn: number
+  volume: number
 }
 
 export const feedDataBase = new DataBase<FeedRecord>('feed_records');
@@ -33,7 +33,7 @@ export const ring = new class Ring {
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
   async init(navigate: Function) {
-    if (location.hostname.startsWith('192')) {
+    if (location.hostname.startsWith('localhost') || location.hostname.startsWith('192')) {
       return;
     }
     await feedDataBase.reload();

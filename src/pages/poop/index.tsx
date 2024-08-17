@@ -2,10 +2,10 @@ import { Dialog, Form, Input, Radio, Space } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import { createRef, useCallback, useMemo } from 'react';
+import { createRef, useCallback } from 'react';
 import poopGif from '../../assets/poop.gif';
-import { ButtomButton, Button } from '../../components/Button';
-import db, { Color, PoopRecord, Smell, Style } from './db';
+import { BottomButton, Button, ButtonGroup } from '../../components/Button';
+import db, { Color, PoopRecord, PeepRecord, Smell, Style } from './db';
 import './index.scss';
 import { asyncPrompt } from '../../utils/prompt';
 import TimePicker, { TimePickerRef } from '../../components/TimePicker';
@@ -91,14 +91,14 @@ const createPrompt = () => {
 
 
 export default () => {
-  const { list, add, remove } = db.useDataBaseList();
+  const { list } = db.useDataBaseList();
   const createRecord = useCallback(async () => {
     const data = await createPrompt();
     if (!data) return true;
-    add({...data, type: 'poop', time: Date.now()});
+    db.add({...data, id: Date.now(), timestamps: data.time || Date.now(), type: 'poop' });
     return true;
   }, []);
-  const creatRecordPee = useCallback(async () => {
+  const createRecordPee = useCallback(async () => {
     const ref = createRef<TimePickerRef>();
     const yes = await asyncPrompt({
       title: "宝宝尿了哦?",
@@ -111,9 +111,15 @@ export default () => {
       cancelText: "你才尿了呢"
     });
     if (!yes) return;
-    add({ type: 'pee', time: ref.current!.getValue() } as any) 
+    const v = ref.current!.getValue();
+    db.add({
+      id: Date.now(),
+      timestamps: v,
+      type: 'pee',
+      time: v
+    }); 
   }, []);
-  const reverseList = useMemo(() => ([...list].reverse()), [list]);
+  
   return (
     <div className='poop-page'>
       <img src={poopGif} />
@@ -121,8 +127,8 @@ export default () => {
         <div className='poop-page-list-mask'>
           <ol>
             {
-              reverseList.map(item => (
-                <li>
+              list.map(item => (
+                <li key={item.id}>
                   <div>
                     <div>{dayjs(item.time).format('MM-DD HH:mm')}</div>
                     {
@@ -136,7 +142,7 @@ export default () => {
                         </>
                       )
                     }
-                    <div onClick={() => remove(item)}>删除</div>
+                    <div onClick={() => db.remove(item)}>删除</div>
                   </div>
                 </li>
               ))
@@ -145,10 +151,12 @@ export default () => {
         </div>
       </div>
       
-      <ButtomButton className='poop-page-btns'>
-        <Button onClick={createRecord}>💩</Button>
-        <Button className='poop-page-btns-pee' border onClick={creatRecordPee}>🍺</Button>
-      </ButtomButton>
+      <BottomButton className='poop-page-btns'>
+        <ButtonGroup>
+          <Button onClick={createRecord} type='square'>💩&nbsp;&nbsp;粑粑</Button>
+          <Button className='poop-page-btns-pee' type='square' onClick={createRecordPee}>嘘嘘  🍺</Button>
+        </ButtonGroup>
+      </BottomButton>
     </div>
   );
 }

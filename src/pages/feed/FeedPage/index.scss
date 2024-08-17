@@ -15,8 +15,10 @@
     --background-color: red;
   }
   &-icon {
-    path {fill: red;}
     font-size: 20px;
+    path {
+      fill: red;
+    }
   }
   &-group {
     display: flex;
@@ -40,5 +42,13 @@
     display: flex;
     justify-content: center;
     width: 100%;
+  }
+  &-img {
+    margin: max(calc(100vh - 600px), 100px) auto 20px auto;
+    display: block;
+    max-width: 120px;
+    &[src=''] {
+      display: none;
+    }
   }
 }

@@ -10,3 +10,20 @@ export const msFormat = (n: number, showHours = false) => {
   const second = Math.floor(n % MINUTE / 1000);
   return (showHours ? [hour, minute, second] : [minute, second]).map(n => n < 10 ? `0${n}` : n).join(':');
 }
+
+export const getTimesOfList = (times: number[] | undefined, pad = false, ms = false) => {
+  if (!times?.length) return 0
+  let volume = 0;
+  let padTimes = times;
+  if (times.length % 2 === 1 && pad) {
+    padTimes = [...padTimes, Date.now()];
+  }
+  for (let i = 0; i < padTimes.length; i+=2) {
+    if (padTimes[i+1] === undefined) continue;
+    volume += padTimes[i+1] - padTimes[i]
+  }
+  if (ms) {
+    return volume;
+  }
+  return +(volume / 60000).toFixed(2);
+}

@@ -1,7 +1,7 @@
 import { CalendarPickerView, CalendarPickerViewRef, Dialog, Input, InputRef, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ButtomButton, Button } from '../../components/Button';
+import { BottomButton, Button } from '../../components/Button';
 import '../../main.scss';
 import db, { Schedule as ScheduleItem } from './db';
 import './index.scss';
@@ -94,10 +94,10 @@ const Schedule = () => {
           })
         }
       </ol>
-      <ButtomButton className='calendar-blk-plus'>
+      <BottomButton className='calendar-blk-plus'>
         <Button onClick={addSchedule}>+</Button>
         <Button className='calendar-blk-today' onClick={goToday}>今</Button>
-      </ButtomButton>
+      </BottomButton>
     </>
   )
 }
