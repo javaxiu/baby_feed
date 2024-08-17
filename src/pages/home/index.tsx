@@ -6,6 +6,8 @@ import { feedDataBase } from '../feed/db';
 import scheduleDb from '../schedule/db';
 import './index.scss';
 import FeedChart from './FeedChart';
+import PoopChart from './PoopChart';
+import { upload } from '@utils/sync';
 
 
 const EventNotice = () => {
@@ -56,7 +58,7 @@ const TodayFeedStatistics = () => {
 export default () => {
   return (
     <div className='home-page'>
-      <div className='home-page-greeting'>
+      <div className='home-page-greeting' onClick={upload}>
         <div className='home-page-greeting-name'>小满</div>
         <div className='home-page-greeting-days'>已经出生 <b>{dayjs().diff(dayjs('2024-05-20'), 'day')}</b> 天啦</div>
       </div>
@@ -64,6 +66,7 @@ export default () => {
       <TodayFeedStatistics />
       <EventNotice />
       <FeedChart />
+      <PoopChart />
     </div>
   );
 }

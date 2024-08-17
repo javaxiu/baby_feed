@@ -1,7 +1,7 @@
 import Card, { SwitchBtn } from "@components/Card";
 import { Canvas, Chart, Line, Point, Axis } from '@antv/f2';
 import { useEffect, useRef, useState } from "react";
-import { feedDataBase } from "../feed/db";
+import db from "../poop/db";
 import dayjs from "dayjs";
 import { MINUTE } from "@utils/helpers";
 import { Range } from "@utils/database";
@@ -13,14 +13,16 @@ const Ranges = [
   { label: '30天', id: 'month' },
 ];
 
-const FeedChart = () => {
+const PoopChart = () => {
   const dom = useRef<HTMLCanvasElement>(null);
   const [range, setRange] = useState<string>(Ranges[0].id);
-  const list = feedDataBase.useDataBaseRange(range as Range, (rangeList) => {
+  const list = db.useDataBaseRange(range as Range, (rangeList) => {
     return {
-      volume: rangeList.reduce((pre, cur) => pre + cur.volume, 0),
+      volume: rangeList.length,
     }
   });
+
+  console.log(list);
 
   useEffect(() => {
     const context = dom.current!.getContext("2d");
@@ -44,7 +46,7 @@ const FeedChart = () => {
 
 
   return (
-    <Card title='嘬嘬记录' extra={
+    <Card title='噗噗记录' extra={
       <SwitchBtn
         value={range}
         options={Ranges}
@@ -56,4 +58,4 @@ const FeedChart = () => {
   )
 }
 
-export default FeedChart;
+export default PoopChart;

@@ -24,7 +24,7 @@ export const upload = async () => {
   }).then(r => r.text())
   .catch(e => {
     Toast.show(JSON.stringify(e));
-    throw new Error(e);
+    console.log(e);
   })
   Toast.show(typeof r === 'string' ? r : JSON.stringify(r));
 }
