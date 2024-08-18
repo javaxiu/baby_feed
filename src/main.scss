@@ -1,11 +1,7 @@
 // @tailwind base;
 // @tailwind components;
 // @tailwind utilities;
-
-#root {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+body {
   --page-bg-r: 241;
   --page-bg-g: 244;
   --page-bg-b: 248;
@@ -20,6 +16,11 @@
     --text-color: #f0f0f0;
     color: var(--text-color);
   }
+}
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 * {
   padding: 0;

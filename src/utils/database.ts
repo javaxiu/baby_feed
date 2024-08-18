@@ -5,11 +5,12 @@ import { asyncPrompt } from "./prompt";
 import dayjs from "dayjs";
 import mitt from "mitt";
 import _ from "underscore";
+import { ID_TS_FMT } from "./helpers";
 
 
 export const indexDb = new Dexie("MyDatabase3");
 
-export type Range = 'day' | 'week' | 'month';
+export type Range = 'day' | 'week' | 'month' | 'year';
 type CustomRange = { n: number, unit: Range };
 
 window.onbeforeunload = () => {
@@ -105,12 +106,12 @@ class DataBase<T extends Record<string, any>> {
       const end = +dayjs();
       this.table.where("timestamps").between(start, end).reverse().sortBy('timestamps').then(resp => {
         if (groupBy) {
-          const fmt = ({'day': 'minute', 'week': 'day', 'month': 'day'} as const)[unit];
-          const groupList = _.groupBy(resp, item => String(dayjs(item.timestamps).startOf(fmt).format()));
+          const fmt = ({'day': 'minute', 'week': 'day', 'month': 'day', 'year': 'month'} as const)[unit];
+          const groupList = _.groupBy(resp, item => String(dayjs(item.timestamps).startOf(fmt).valueOf()));
           const newList = Object.keys(groupList).map(groupTime => {
             return {
-              id: groupTime,
-              timestamps: groupTime,
+              id: dayjs(+groupTime).format(ID_TS_FMT),
+              timestamps: +groupTime,
               ...groupBy(groupList[groupTime]),
             }
           });

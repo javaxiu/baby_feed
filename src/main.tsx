@@ -14,6 +14,7 @@ import classnames from 'classnames';
 import { ring } from "./pages/feed/db";
 import './main.scss';
 import '@utils/sync';
+import BodyData from "./pages/body";
 
 const HomePage = () => {
   const current = useLocation()?.pathname || 'home';
@@ -27,12 +28,13 @@ const HomePage = () => {
     { path: '/feed', element: <Feed /> },
     { path: '/poop', element: <Poop /> },
     { path: '/schedule', element: <Schedule /> },
+    { path: '/body', element: <BodyData /> },
     { path: '/', element: <Home /> },
   ]);
   useEffect(() => {
     ring.init(navigate);
     const setTheme = () => {
-      const root = document.getElementById('root')!;
+      const root = document.body;
       const h = new Date().getHours();
       if (h >= 20 || h < 7) {
         root.classList.add('night-mode');
@@ -51,6 +53,7 @@ const HomePage = () => {
         [
           { key: '/home', el: <span>🏠 统计</span> },
           { key: '/feed', el: <span>🍼 嘬嘬</span> },
+          { key: '/body', el: <span>📏 体测</span> },
           { key: '/schedule', el: <span>📅 日历</span> },
           { key: '/poop', el: <span>💩 爆米花</span> },
         ].map(({ key, el }) => (
