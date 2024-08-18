@@ -10,10 +10,10 @@ export default () => {
 
   return (
     <div className="feed-page">
-      <div className="page-title">宝宝吃饭笔记</div>
       {
         !isFeeding ? (
           <>
+            <div className="page-title">宝宝吃饭笔记</div>
             <RecordList />
             <LatestPrompt />
           </>

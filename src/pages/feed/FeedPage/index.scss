@@ -14,6 +14,7 @@
   align-items: center;
   gap: 3px;
   color: #000;
+  font-size: 16px;
   @include feed-btn-style( rgb(128,128,128));
   &.active {
     @include feed-btn-style(red);

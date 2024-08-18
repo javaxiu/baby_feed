@@ -5,7 +5,7 @@ import { Button } from "@components/Button";
 import TimePicker from '@components/TimePicker';
 import { ID_TS_FMT, MINUTE, msFormat } from '@utils/helpers';
 import { asyncPrompt } from '@utils/prompt';
-import { useMemoizedFn } from "ahooks";
+import { useLocalStorageState, useMemoizedFn } from "ahooks";
 import { Form, Input } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import dayjs from 'dayjs';
@@ -16,20 +16,23 @@ import './index.scss';
 import { feedSignal, useIsFeeding } from "./signal";
 
 const FeedPage = () => {
-  const [times, setTimes] = useState<[number, number]>([0, 0]);
+  const [times = [0, 0], setTimes] = useState<[number, number]>([0, 0]);
+  const [startFeedingTime, setStartFeedingTime] = useLocalStorageState('feeding-start-time', { defaultValue: 0 });
   const isFeeding = useIsFeeding();
 
   const onChangeTime = useMemoizedFn((key: string, t: number) => {
-    setTimes(times => key == 'left' ? [t, times[1]] : [times[0], t]);
+    setTimes(times => key == 'left' ? [t, times![1]] : [times![0], t]);
+    !startFeedingTime && setStartFeedingTime(Date.now());
   });
 
   const reset = useCallback(() => {
     feedSignal.set('finish');
     setTimes([0, 0]);
+    setStartFeedingTime(0);
   }, []);
 
   const onClickDone = useCallback(async () => {
-    const now = dayjs();
+    const startTimeD = dayjs(startFeedingTime);
     const volume = times[0] + times[1];
     if (volume < MINUTE) {
       const sure = await asyncPrompt({
@@ -40,11 +43,11 @@ const FeedPage = () => {
       if (!sure) return;
     }
     feedDataBase.add({
-      id: now.format(ID_TS_FMT),
-      timestamps: +now - times[0] - times[1],
+      id: startTimeD.format(ID_TS_FMT),
+      timestamps: startTimeD.valueOf(),
       left: times[0],
       right: times[1],
-      stop: +now,
+      stop: startTimeD.valueOf() + times[0] + times[1],
       volume,
     });
     reset();
@@ -119,7 +122,7 @@ const FeedPage = () => {
         <FeedBtn title="右边" id="right" onChangeTime={onChangeTime} />
       </div>
       {
-        times.filter(Boolean).length === 0 ? null : (
+        startFeedingTime === 0 ? null : (
           <div className="feed-control-bottom">
             <Button type="square" onClick={onClickDone}>喂饱啦</Button>
           </div>
