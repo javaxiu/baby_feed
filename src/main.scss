@@ -10,6 +10,7 @@
   --page-bg-g: 244;
   --page-bg-b: 248;
   --text-color: #333;
+  --theme-color: rgb(246, 111, 151);
   color: var(--text-color);
   &.night-mode {
     filter: brightness(0.8) contrast(1.2);

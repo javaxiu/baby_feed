@@ -1,5 +1,5 @@
 import { PlayOutline } from "antd-mobile-icons";
-import Pause from './pause.svg?react';
+import Pause from '@assets/svg/pause.svg?react';
 import './index.scss';
 import { createElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import classNames from "classnames";

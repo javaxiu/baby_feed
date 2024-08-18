@@ -55,9 +55,6 @@
         display: inline-flex;
         gap: 4px;
         align-items: center;
-        & > div:nth-last-child(2) {
-          flex: 1;
-        }
       }
     }
   } 

@@ -1,6 +1,6 @@
 import { RecordList } from "./RecordList";
 import './index.scss';
-import FeedControl from './FeedPage';
+import FeedPage from './FeedPage';
 import { LatestPrompt } from './Lastest';
 import { useIsFeeding } from './FeedPage/signal';
 
@@ -18,7 +18,7 @@ export default () => {
           </>
         ) : null
       }
-      <FeedControl />
+      <FeedPage />
     </div>
   )
 }

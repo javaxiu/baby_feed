@@ -15,7 +15,7 @@ const Ranges = [
 
 const FeedChart = () => {
   const dom = useRef<HTMLCanvasElement>(null);
-  const [range, setRange] = useState<string>(Ranges[0].id);
+  const [range, setRange] = useState<string>(Ranges[1].id);
   const list = feedDataBase.useDataBaseRange(range as Range, (rangeList) => {
     return {
       volume: rangeList.reduce((pre, cur) => pre + cur.volume, 0),
@@ -37,8 +37,8 @@ const FeedChart = () => {
           <Axis field="count"/>
           <Line x="timestamps" y="volume" />
           <Point x="timestamps" y="volume" />
-          <Line x="timestamps" y="count" color="green"/>
-          <Point x="timestamps" y="count" color="green"/>
+          <Line x="timestamps" y="count" color="rgb(246, 111, 151)"/>
+          <Point x="timestamps" y="count" color="rgb(246, 111, 151)"/>
         </Chart>
       </Canvas>
     )

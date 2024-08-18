@@ -101,9 +101,9 @@ const Schedule = () => {
         }
       </ol>
       <BottomButton className='calendar-blk-plus'>
-        <Button onClick={addSchedule}>+</Button>
-        <Button className='calendar-blk-today' onClick={goToday}>今</Button>
+        <Button type='circle' onClick={addSchedule}>+</Button>
       </BottomButton>
+      <Button type='bottom-right' onClick={goToday}>今</Button>
     </>
   )
 }

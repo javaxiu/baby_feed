@@ -1,15 +1,23 @@
 import dayjs from "dayjs";
-import { useCallback } from "react";
-import { feedDataBase } from "./db";
+import { FeedRecord, feedDataBase } from "./db";
 import { msFormat } from "@utils/helpers";
+import { makeDetailDialog } from "@utils/prompt";
+
+const showDetail = makeDetailDialog<FeedRecord>({
+  title: '吃饭记录',
+  fields: [
+    { label: '开始时间', name: 'timestamps', render: v => dayjs(v).format('YYYY-MM-DD HH:mm') },
+    { label: '左边', name: 'left', render: msFormat },
+    { label: '右边', name: 'right', render: msFormat },
+    { label: '时长', name: 'volume', render: msFormat },
+  ],
+  onDelete(item) {
+    feedDataBase.remove(item);
+  }
+});
 
 export const RecordList = () => {
   const list = feedDataBase.useDataBaseRange({ n: 2, unit: 'day' });
-
-  const onDelete = useCallback((e: React.MouseEvent) => {
-    const id = e.currentTarget.parentElement?.parentElement?.dataset.id;
-    feedDataBase.remove(list.find(r => r.id === id)!);
-  }, [list]);
 
   return (
     <div className="feed-list">
@@ -17,15 +25,10 @@ export const RecordList = () => {
       <ul>
         {
           list.map((r, i) => (
-            <li key={i} data-id={r.id}>
+            <li key={i} data-id={r.id} onClick={() => showDetail(r)}>
               <div>        
                 <span>{dayjs(r.timestamps).format('MM-DD HH:mm')}</span>
                 <span>共:{msFormat(r.volume || 0)}</span>
-                <span>左:{msFormat(r.left || 0)}</span>
-                <span>右:{msFormat(r.right || 0)}</span>
-              </div>
-              <div>
-                <span onClick={onDelete}>删除</span>
               </div>
             </li>
           ))

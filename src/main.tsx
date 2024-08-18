@@ -32,14 +32,16 @@ const HomePage = () => {
   useEffect(() => {
     ring.init(navigate);
     const setTheme = () => {
-      const root = document.getElementById('#root')!;
-      if (new Date().getHours() > 20) {
+      const root = document.getElementById('root')!;
+      const h = new Date().getHours();
+      if (h >= 20 || h < 7) {
         root.classList.add('night-mode');
       } else {
         root.classList.remove('night-mode');
       }
     }
     setInterval(setTheme, 60000);
+    setTheme();
   }, []);
   return (
     <div className="home-container-wrap">

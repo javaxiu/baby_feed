@@ -1,5 +1,6 @@
 import drinkingGif from '@assets/drinking.gif';
 import drinkingPauseGif from '@assets/drinking_pause.gif';
+import CloseSvg from '@assets/svg/close.svg?react';
 import { Button } from "@components/Button";
 import TimePicker from '@components/TimePicker';
 import { ID_TS_FMT, MINUTE, msFormat } from '@utils/helpers';
@@ -14,7 +15,7 @@ import FeedBtn from "./FeedBtn";
 import './index.scss';
 import { feedSignal, useIsFeeding } from "./signal";
 
-const FeedControl = () => {
+const FeedPage = () => {
   const [times, setTimes] = useState<[number, number]>([0, 0]);
   const isFeeding = useIsFeeding();
 
@@ -27,15 +28,24 @@ const FeedControl = () => {
     setTimes([0, 0]);
   }, []);
 
-  const onClickDone = useCallback(() => {
+  const onClickDone = useCallback(async () => {
     const now = dayjs();
+    const volume = times[0] + times[1];
+    if (volume < MINUTE) {
+      const sure = await asyncPrompt({
+        content: '才喂了一分钟吗',
+        confirmText: '是呀',
+        cancelText: '点错啦',
+      });
+      if (!sure) return;
+    }
     feedDataBase.add({
       id: now.format(ID_TS_FMT),
       timestamps: +now - times[0] - times[1],
       left: times[0],
       right: times[1],
       stop: +now,
-      volume: times[0] + times[1],
+      volume,
     });
     reset();
   }, [times]);
@@ -71,8 +81,23 @@ const FeedControl = () => {
     })
   }, []);
 
+  const onClose = useCallback(() => {
+    asyncPrompt({
+      title: '不喂了吗?',
+      content: '这次就不记录了哦？',
+      confirmText: '嗯嗯',
+      cancelText: '还要吃',
+    }).then(ok => {
+      if (!ok) return;
+      reset();
+    })
+  }, []);
+
   return (
     <div className="feed-control">
+      {
+        isFeeding ? <CloseSvg className='feed-control-close' onClick={onClose}/> : null
+      }
       <img
         className='feed-control-img'
         src={isFeeding ? drinkingGif : (feedSignal.get() === 'pause' ? drinkingPauseGif : '')}
@@ -99,9 +124,9 @@ const FeedControl = () => {
         )
       }
 
-      <Button onClick={addRecord} className='feed-page-add'>+</Button>
+      <Button onClick={addRecord} className='feed-control-add' type='bottom-right'>+</Button>
     </div>
   )
 };
 
-export default FeedControl;
+export default FeedPage;

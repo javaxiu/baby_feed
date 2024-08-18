@@ -14,13 +14,17 @@ export const Button = (props: {
   border?: boolean,
   onClick?(): any,
   children: any,
-  type?: 'square' | 'cicle'
+  type?: 'square' | 'circle' | 'bottom-right'
 }) => (
   <div
     className={classNames(
-      props.type === 'square' ? 'square-button' : 'circle-button',
+      {
+        "square-button": props.type === 'square',
+        "circle-button": props.type === 'circle',
+        "circle-button bottom-right": props.type === 'bottom-right',
+      },
       { border: props.border },
-      props.className
+      props.className,
     )}
     onClick={props.onClick}>
       {props.children}

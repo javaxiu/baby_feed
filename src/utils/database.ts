@@ -129,7 +129,22 @@ class DataBase<T extends Record<string, any>> {
     }, []);
 
     return list;
-  } 
+  }
+
+  useLatest = (): WithBasicInfo<T> | undefined => {
+    const [latest, setLatest] = useState<WithBasicInfo<T>>();
+    const refresh = useMemoizedFn(() => {
+      this.table.reverse().limit(1).sortBy('timestamps').then((resp) => {
+        setLatest(resp?.[0]);
+      })
+    });
+    useEffect(refresh, []);
+    useEffect(() => {
+      this.event.on('*', refresh);
+      return () => this.event.off('*', refresh);
+    }, []);
+    return latest;
+  }
 }
 
 interface IUseDataBaseRange<T> {

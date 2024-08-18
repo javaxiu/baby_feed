@@ -4,7 +4,7 @@
 }
 
 .feed-btn {
-  --size: 80px;
+  --size: 30vw;
   border-radius: 50%;
   width: var(--size);
   height: var(--size);
@@ -19,7 +19,7 @@
     @include feed-btn-style(red);
   }
   &-icon {
-    font-size: 20px;
+    font-size: 2em;
     path {
       fill: red;
     }
@@ -32,6 +32,13 @@
 }
 
 .feed-control {
+  &-close {
+    color: var(--theme-color);
+    font-size: 40px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+  }
   &-total {
     text-align: center;
     padding: 20px 0;
@@ -46,13 +53,19 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    .square-button {
+      padding: 0 36px;
+    }
   }
   &-img {
-    margin: max(calc(100vh - 600px), 100px) auto 20px auto;
+    margin: 60px auto 20px auto;
     display: block;
     max-width: 120px;
     &[src=''] {
       display: none;
     }
+  }
+  &-add {
+    font-size: 28px!important;
   }
 }
