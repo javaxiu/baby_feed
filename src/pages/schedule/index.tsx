@@ -75,11 +75,12 @@ const Schedule = () => {
 
   return (
     <>
+      <div className="page-title">宝宝日程</div>
       <CalendarPickerView
         ref={calendarRef}
         className='calendar-blk-cal'
         selectionMode="single"
-        title="宝宝的日程"
+        title=""
         renderBottom={(date) => dateEvent[+dayjs(date).startOf('day')]?.length ? dot : null}
         value={selectDate}
         onChange={changeSelected}

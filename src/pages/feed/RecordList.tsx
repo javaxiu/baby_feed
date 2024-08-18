@@ -21,7 +21,6 @@ export const RecordList = () => {
 
   return (
     <div className="feed-list">
-      <div>宝宝吃饭笔记</div>
       <ul>
         {
           list.map((r, i) => (

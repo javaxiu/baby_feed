@@ -10,7 +10,7 @@
   --page-bg-g: 244;
   --page-bg-b: 248;
   --text-color: #333;
-  --theme-color: rgb(246, 111, 151);
+  --theme-color: #f66f97;
   color: var(--text-color);
   &.night-mode {
     filter: brightness(0.8) contrast(1.2);
@@ -57,5 +57,15 @@
         background-color: rgba(204, 204, 204, .5);
       }
     }
+  }
+  
+  .page-title {
+    position: sticky;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: flex-start;
+    padding: 12px;
+    font-size: 16px;
+    top: 0;
   }
 }

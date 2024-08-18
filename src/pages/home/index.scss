@@ -1,12 +1,6 @@
 .home-page {
   height: 100%;
   &-greeting {
-    position: sticky;
-    top: 0;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    justify-content: flex-start;
-    padding: 12px;
     &-name {
       font-weight: bold;
       padding-right: 8px;
@@ -15,7 +9,7 @@
   &-gif {
     margin: auto;
     display: block;
-    width: 60vw;
+    width: 50vw;
   }
   &-today {
     padding: 12px;

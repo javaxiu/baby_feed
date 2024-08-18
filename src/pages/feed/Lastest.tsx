@@ -41,7 +41,7 @@ export const LatestPrompt = () => {
         上次 左边: <b>{msFormat(latest!.left || 0)}</b>,
         右边: <b>{msFormat(latest!.right || 0)}</b> 哦
       </div>
-      <img src={image} />
+      <img src={image} className='lastest-prompt-gif'/>
       { ring.nextNotifyTime ? <div>下次提醒喂宝宝 {dayjs(ring.nextNotifyTime).format('HH:mm:ss')}</div> : null }
     </div>
   )

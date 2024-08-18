@@ -27,7 +27,7 @@ export const makeDetailDialog = <T,>(params: {
       form.setFieldsValue(props.value as any);
     }, [props.value]);
     return (
-      <Form form={form} layout="horizontal" style={{ "--prefix-width": "3em" }}>
+      <Form form={form} layout="horizontal" style={{ "--prefix-width": "4em" }}>
         {
           params.fields
             .map(field => (

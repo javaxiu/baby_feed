@@ -100,7 +100,9 @@ const FeedPage = () => {
       }
       <img
         className='feed-control-img'
-        src={isFeeding ? drinkingGif : (feedSignal.get() === 'pause' ? drinkingPauseGif : '')}
+        src={isFeeding ? drinkingGif : (
+          feedSignal.get() === 'pause' ? drinkingPauseGif : ''
+        )}
       />
       {
         isFeeding ? (

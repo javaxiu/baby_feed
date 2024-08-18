@@ -35,31 +35,34 @@ export default () => {
   
   return (
     <div className='poop-page'>
-      <img src={poopGif} />
-      <div className='poop-page-list'>
-        <div className='poop-page-list-mask'>
-          <ol>
-            {
-              list.map(item => (
-                <li key={item.id} onClick={() => showDetail(item)}>
-                  <div>
-                    <div>{dayjs(item.time).format('MM-DD HH:mm')}</div>
-                    {
-                      item.type === 'pee' ? (
-                        <div>放了一泡水</div>
-                      ) : (
-                        <>
-                        <div style={{ color: item.color }}>{Color[item.color]}</div>
-                        <div>{Smell[item.smell]}</div>
-                        <div>{Style[item.style]}</div>
-                        </>
-                      )
-                    }
-                  </div>
-                </li>
-              ))
-            }
-          </ol>
+      <div className="page-title">宝宝噗噗记录</div>
+      <div className='poop-page-wrap'>
+        <img src={poopGif} />
+        <div className='poop-page-list'>
+          <div className='poop-page-list-mask'>
+            <ol>
+              {
+                list.map(item => (
+                  <li key={item.id} onClick={() => showDetail(item)}>
+                    <div>
+                      <div>{dayjs(item.time).format('MM-DD HH:mm')}</div>
+                      {
+                        item.type === 'pee' ? (
+                          <div>放了一泡水</div>
+                        ) : (
+                          <>
+                          <div style={{ color: item.color }}>{Color[item.color]}</div>
+                          <div>{Smell[item.smell]}</div>
+                          <div>{Style[item.style]}</div>
+                          </>
+                        )
+                      }
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
         </div>
       </div>
       <Add />

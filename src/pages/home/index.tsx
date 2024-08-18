@@ -58,7 +58,7 @@ const TodayFeedStatistics = () => {
 export default () => {
   return (
     <div className='home-page'>
-      <div className='home-page-greeting' onClick={upload}>
+      <div className='page-title home-page-greeting' onClick={upload}>
         <div className='home-page-greeting-name'>小满</div>
         <div className='home-page-greeting-days'>已经出生 <b>{dayjs().diff(dayjs('2024-05-20'), 'day')}</b> 天啦</div>
       </div>

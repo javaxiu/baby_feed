@@ -12,7 +12,7 @@
     "android:build": "pnpm run tauri android build --target armv7",
     "mv": "move .\\src-tauri\\gen\\android\\app\\build\\outputs\\apk\\universal\\release\\app-universal-release-unsigned.apk app.apk",
     "sign": "apksigner sign --ks android.keystore --ks-key-alias androidtest app.apk",
-    "release": "node ./version.js pnpm run android:build && pnpm run mv && pnpm run sign"
+    "release": "node ./version.js && pnpm run android:build && pnpm run mv && pnpm run sign"
   },
   "dependencies": {
     "@antv/f2": "^5.5.2",

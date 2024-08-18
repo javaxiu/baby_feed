@@ -1,9 +1,8 @@
 import Card, { SwitchBtn } from "@components/Card";
-import { Canvas, Chart, Line, Point, Axis } from '@antv/f2';
-import { useEffect, useRef, useState } from "react";
+import { Canvas, Chart, Line, Point, Axis, Legend } from '@antv/f2';
+import { useEffect, useMemo, useRef, useState } from "react";
 import db from "../poop/db";
 import dayjs from "dayjs";
-import { MINUTE } from "@utils/helpers";
 import { Range } from "@utils/database";
 
 
@@ -15,28 +14,46 @@ const Ranges = [
 
 const PoopChart = () => {
   const dom = useRef<HTMLCanvasElement>(null);
-  const [range, setRange] = useState<string>(Ranges[0].id);
+  const [range, setRange] = useState<string>(Ranges[1].id);
   const list = db.useDataBaseRange(range as Range, (rangeList) => {
     return {
-      volume: rangeList.length,
+      poop: rangeList.filter(x => x.type === 'poop').length,
+      pee: rangeList.filter(x => x.type === 'pee').length,
     }
   });
 
-  console.log(list);
+  const renderList = useMemo(() => {
+    const newList = [];
+    for (const item of list.reverse()) {
+      newList.push({
+        type: 'poop',
+        value: item.poop,
+        timestamps: +dayjs(item.timestamps),
+      }, {
+        type: 'pee',
+        value: item.pee,
+        timestamps: +dayjs(item.timestamps),
+      });
+    }
+    return newList;
+  }, [list]);
 
   useEffect(() => {
     const context = dom.current!.getContext("2d");
-    // const today = dayjs().startOf('day').valueOf();
-    // const tonight = dayjs().endOf('day').valueOf();
     const timeFmt = range === 'day' ? 'HH:mm' : 'MM-DD';
+    const color = {
+      field: 'type',
+      range: ['#f66f97', '#1890ff']
+    };
     const el = (
       // @ts-ignore
       <Canvas context={context} pixelRatio={window.devicePixelRatio}>
-        <Chart data={list}>
-          <Axis field="timestamps" tickCount={5} formatter={v => dayjs(v).format(timeFmt)} />
-          <Axis field="volume" formatter={v => Math.ceil(v / MINUTE)}/>
-          <Line x="timestamps" y="volume" />
-          <Point x="timestamps" y="volume" />
+        <Chart data={renderList} >
+          <Legend position="top" />
+          <Axis field="timestamps" formatter={v => dayjs(v).format(timeFmt)} />
+          <Axis field="value" />
+          <Line connectNulls x="timestamps" y="value" color={color}/>
+          <Point x="timestamps" y="value" color={color} />
         </Chart>
       </Canvas>
     )
