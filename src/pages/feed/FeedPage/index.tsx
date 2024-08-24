@@ -10,29 +10,36 @@ import { Form, Input } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import dayjs from 'dayjs';
 import { createRef, useCallback, useState } from "react";
-import { feedDataBase } from "src/pages/feed/db";
+import { feedDataBase, ring } from "../db";
 import FeedBtn from "./FeedBtn";
 import './index.scss';
-import { feedSignal, useIsFeeding } from "./signal";
+import { feedSignal, useFeedSignalChange, useIsFeeding } from "./signal";
+import { last } from 'underscore';
 
 const FeedPage = () => {
   const [times = [0, 0], setTimes] = useState<[number, number]>([0, 0]);
-  const [startFeedingTime, setStartFeedingTime] = useLocalStorageState('feeding-start-time', { defaultValue: 0 });
+  const [startFeedingTime, setStartFeedingTime] = useLocalStorageState<number[]>('feeding-start-time', { defaultValue: [] });
   const isFeeding = useIsFeeding();
 
   const onChangeTime = useMemoizedFn((key: string, t: number) => {
     setTimes(times => key == 'left' ? [t, times![1]] : [times![0], t]);
-    !startFeedingTime && setStartFeedingTime(Date.now());
+    ring.feed();
   });
 
   const reset = useCallback(() => {
     feedSignal.set('finish');
     setTimes([0, 0]);
-    setStartFeedingTime(0);
+    setStartFeedingTime([]);
   }, []);
 
-  const onClickDone = useCallback(async () => {
-    const startTimeD = dayjs(startFeedingTime);
+  useFeedSignalChange(null, (s) => {
+    if (s === 'left' || s === 'right') {
+      setStartFeedingTime(l => [...(l || []), Date.now()]);
+    }
+  });
+
+  const onClickDone = useMemoizedFn(async () => {
+    const startTimeD = dayjs(startFeedingTime![startFeedingTime!.length - 1]);
     const volume = times[0] + times[1];
     if (volume < MINUTE) {
       const sure = await asyncPrompt({
@@ -51,7 +58,7 @@ const FeedPage = () => {
       volume,
     });
     reset();
-  }, [times]);
+  });
 
   const addRecord = useCallback(async () => {
     const ref = createRef<FormInstance>();
@@ -81,7 +88,7 @@ const FeedPage = () => {
       left: formValue.left,
       right: formValue.right,
       volume: formValue.left + formValue.right,
-    })
+    });
   }, []);
 
   const onClose = useCallback(() => {
@@ -111,8 +118,12 @@ const FeedPage = () => {
         isFeeding ? (
           <>
           <div className="feed-control-total">
-            <b>{msFormat((times[0] + times[1]))}</b>
-            <div>一共喂了</div>
+            <div className='text-center text-lg'>
+              {dayjs(last(startFeedingTime!)).format('HH:mm:ss')} 开始喂的
+            </div>
+            <div className='flex justify-center items-center'>
+              <span className='pr-2'>一共喂了</span> <b>{msFormat((times[0] + times[1]))}</b>
+            </div>
           </div>
           </>
         ) : null
@@ -122,13 +133,12 @@ const FeedPage = () => {
         <FeedBtn title="右边" id="right" onChangeTime={onChangeTime} />
       </div>
       {
-        startFeedingTime === 0 ? null : (
+        !startFeedingTime?.length ? null : (
           <div className="feed-control-bottom">
             <Button type="square" onClick={onClickDone}>喂饱啦</Button>
           </div>
         )
       }
-
       <Button onClick={addRecord} className='feed-control-add' type='bottom-right'>+</Button>
     </div>
   )

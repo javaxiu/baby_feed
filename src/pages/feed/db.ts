@@ -1,10 +1,10 @@
 import React from "react"
 import { createRef } from "react"
 import ReactDOM from "react-dom/client"
-import mamaMp3 from '../../assets/mama.mp3';
+import mamaMp3 from '@assets/mama.mp3';
 import { Dialog } from "antd-mobile";
-import DataBase from "../../utils/database";
-import { HOUR, MINUTE } from "../../utils/helpers";
+import DataBase from "@utils/database";
+import { HOUR, MINUTE, sleep } from "@utils/helpers";
 
 export interface FeedRecordOld {
   id: number
@@ -33,24 +33,23 @@ export const ring = new class Ring {
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
   async init(navigate: Function) {
-    if (location.hostname.startsWith('localhost') || location.hostname.startsWith('192')) {
-      return;
-    }
-    const latest = await feedDataBase.latest();
     this.navigate = navigate;
-    this.nextNotifyTime = latest[0].timestamps + 2.8 * HOUR;
     const container = document.createElement('div');
     document.body.append(container);
     ReactDOM.createRoot(container).render(React.createElement('audio', {
       src: mamaMp3,
       ref: this.el,
     }));
-    setTimeout(() => {
-      this.check();
-    }, 3000);
+    feedDataBase.latest().then(last => {
+      this.feed(last?.stop);
+      sleep(3000).then(this.check);
+    });
   }
-  feed() {
-    this.nextNotifyTime = Date.now() + 2.8 * HOUR;
+  feed(time?: number) {
+    if (!time) {
+      time = Date.now();
+    }
+    this.nextNotifyTime = time + 3 * HOUR;
   }
   play = (play: boolean) => {
     if (!this.el.current) return;

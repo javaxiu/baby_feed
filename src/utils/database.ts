@@ -1,4 +1,4 @@
-import { useMemoizedFn } from "ahooks";
+import { useDeepCompareEffect, useMemoizedFn } from "ahooks";
 import { useEffect, useState } from "react";
 import Dexie, { Table } from 'dexie';
 import { asyncPrompt } from "./prompt";
@@ -33,49 +33,42 @@ class DataBase<T extends Record<string, any>> {
     });
   }
 
-  list: WithBasicInfo<T>[] = [];
-
   add = async (newOne: WithBasicInfo<T>) => {
-    this.list = [...this.list, newOne];
     await this.table.add(newOne);
     this.event.emit('add');
-    return this.list;
+    return this;
   }
   
   remove = async (target: WithBasicInfo<T>) => {
     const result = await asyncPrompt({ title: '要删掉这个吗?', content: dayjs(target.timestamps).format('YYYY-MM-DD HH:mm:ss') });
-    if (!result) return this.list;
-    this.list = this.list.filter(item => item.id !== target.id);
+    if (!result) return this;
     await this.table.delete(target.id);
     this.event.emit('remove');
-    return this.list;
+    return this;
+  }
+
+  update = async (updateOne: WithBasicInfo<T>) => {
+    await this.table.update(updateOne.id, updateOne);
+    this.event.emit('update');
+    return this;
   }
 
   async reload() {
     try {
-      this.list = await this.table.orderBy('timestamps').reverse().toArray();
+      return await this.table.orderBy('timestamps').reverse().toArray();
     } catch {
     }
-    this.list = this.list?.length ? this.list : this.initial;
-    return this.list;
-  }
-
-  get = () => {
-    if (!this.list?.length) {
-      this.reload();
-    }
-    return this.list;
   }
 
   latest = () => {
-    return this.table.orderBy('timestamps').reverse().limit(1).toArray();
+    return this.table.orderBy('timestamps').reverse().limit(1).first();
   }
 
   useDataBaseList = () => {
     const [list, updateList] = useState<WithBasicInfo<T>[]>([]);
     const refresh = useMemoizedFn(async () => {
-      await this.reload()
-      updateList(this.list);
+      const newList = await this.reload()
+      updateList(newList!);
     });
 
     useEffect(() => {
@@ -122,7 +115,7 @@ class DataBase<T extends Record<string, any>> {
       });
     });
 
-    useEffect(refresh, [range])
+    useDeepCompareEffect(refresh, [range])
 
     useEffect(() => {
       this.event.on('*', refresh);

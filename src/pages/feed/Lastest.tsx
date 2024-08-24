@@ -34,15 +34,33 @@ export const LatestPrompt = () => {
   if (!latest) return <div>还没有记录耶</div>;
 
   return (
-    <div className="lastest-prompt">
-      <div>上次喂宝宝是 {dayjs(lastTime).format('HH:mm')}</div>
-      <div>距离上次喂奶已经 <b className='lastest-prompt-pass-time'>{passTime}</b> 啦</div>
-      <div>
-        上次 左边: <b>{msFormat(latest!.left || 0)}</b>,
-        右边: <b>{msFormat(latest!.right || 0)}</b> 哦
+    <div className="text-center text-base">
+      <div className='flex items-center justify-center'>
+        <div>上次 {dayjs(lastTime).format('HH:mm')}</div>
+        <div className='ml-1'>
+          左: <b>{msFormat(latest!.left || 0)}</b>,
+          右: <b>{msFormat(latest!.right || 0)}</b> 哦
+        </div>
       </div>
-      <img src={image} className='lastest-prompt-gif'/>
-      { ring.nextNotifyTime ? <div>下次提醒喂宝宝 {dayjs(ring.nextNotifyTime).format('HH:mm:ss')}</div> : null }
+
+      <div className='flex items-center justify-center mb-1 mt-2 text-base'>
+        距离上次喂奶已经
+        <b className='text-3xl text-second px-2'>
+          {passTime}
+        </b> 啦
+      </div>
+      {
+        ring.nextNotifyTime ? 
+          <div className='mb-2 flex justify-center items-center'>
+            下次提醒喂宝宝
+            <span className='text-primary text-3xl font-bold ml-2'>
+              {dayjs(ring.nextNotifyTime).format('HH:mm')}
+            </span>
+          </div>
+        : null
+      }
+      
+      <img src={image} className='w-1/3 mx-auto'/>
     </div>
   )
 };

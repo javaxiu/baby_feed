@@ -11,6 +11,8 @@ import { sleep, ID_TS_FMT } from './helpers';
 import dayjs from 'dayjs';
 
 export const upload = async () => {
+  const schedule = scheduleDb.reload()
+  const poop = poopDb.reload();
   const r = await fetch("http://192.168.10.11:9000/api/data", {
     method: 'POST',
     headers: {
@@ -18,8 +20,8 @@ export const upload = async () => {
     },
     body: JSON.stringify({
       feed: localStorage.getItem('feed_records'),
-      schedule: scheduleDb.get(),
-      poop: poopDb.get(),
+      schedule,
+      poop,
     }),
   }).then(r => r.text())
   .catch(e => {

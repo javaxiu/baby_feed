@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const HOUR = 60 * 60 * 1000;
 export const MINUTE = 60 * 1000;
 export const ID_TS_FMT = 'YYYY_MM_DD_HH_mm_ss_SSS';
@@ -10,6 +12,17 @@ export const msFormat = (n: number, showHours = false) => {
   const minute = Math.floor((n - hour * HOUR) / MINUTE);
   const second = Math.floor(n % MINUTE / 1000);
   return ((showHours || hour) ? [hour, minute, second] : [minute, second]).map(n => n < 10 ? `0${n}` : n).join(':');
+}
+
+/** 分转时分 */
+export const secFormat = (n: number) => {
+  const hour = Math.floor(n / HOUR);
+  const minute = Math.floor((n - hour * HOUR) / MINUTE);
+  return [hour, minute].map(n => n < 10 ? `0${n}` : n).join(':');
+} 
+
+export const ftFormat = (n: dayjs.ConfigType) => {
+  return dayjs(n).format('YYYY-MM-DD HH:mm:ss')
 }
 
 export const getTimesOfList = (times: number[] | undefined, pad = false, ms = false) => {
@@ -28,3 +41,5 @@ export const getTimesOfList = (times: number[] | undefined, pad = false, ms = fa
   }
   return +(volume / 60000).toFixed(2);
 }
+
+export const isDev = location.hostname.startsWith('localhost') || location.hostname.startsWith('192');

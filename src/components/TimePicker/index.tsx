@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useImperativeHandle, memo, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, memo, useState, useEffect } from 'react';
 import { CloseOutline } from 'antd-mobile-icons'
 import dayjs from 'dayjs';
 import './index.scss';
@@ -7,7 +7,7 @@ import classNames from 'classnames';
 interface Props {
   border?: boolean
   placeholder?: string
-  // value?: number,
+  value?: number,
   onChange?(t: number): void
 }
 
@@ -15,9 +15,10 @@ export interface TimePickerRef {
   getValue(): number
 }
 
-const TimePicker = forwardRef<TimePickerRef, Props>(({
+const TimePicker = memo(forwardRef<TimePickerRef, Props>(({
   border,
   placeholder = '啥时候',
+  value,
   onChange,
 }: Props, ref) => {
   useImperativeHandle(ref, () => ({
@@ -26,6 +27,7 @@ const TimePicker = forwardRef<TimePickerRef, Props>(({
     }
   }));
   const [localValue, setLocalValue] = useState<number>();
+  useEffect(() => setLocalValue(value), [value]);
   const onValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let d = dayjs();
     const [hour, min] = e.target.value.split(':').map(Number);
@@ -42,6 +44,8 @@ const TimePicker = forwardRef<TimePickerRef, Props>(({
       <CloseOutline className={classNames('time-picker-clear', {show: localValue})} onClick={() => setLocalValue(0)}/>
     </div>
   )
-})
+}));
 
-export default memo(TimePicker);
+TimePicker.displayName = 'TimePicker';
+
+export default TimePicker;

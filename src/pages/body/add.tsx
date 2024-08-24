@@ -52,6 +52,7 @@ const DateInput = (props: {
       visible={visible}
       onClose={() => setVisible(false)}
       selectionMode='single'
+      min={dayjs('2024-01-01').toDate()}
       defaultValue={new Date()}
       value={new Date(props.value || Date.now())}
       onChange={date => props.onChange!(date?.valueOf() || Date.now())}
