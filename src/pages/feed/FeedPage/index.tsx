@@ -39,7 +39,7 @@ const FeedPage = () => {
   });
 
   const onClickDone = useMemoizedFn(async () => {
-    const startTimeD = dayjs(startFeedingTime![startFeedingTime!.length - 1]);
+    const startTimeD = dayjs(startFeedingTime![0]);
     const volume = times[0] + times[1];
     if (volume < MINUTE) {
       const sure = await asyncPrompt({
@@ -80,14 +80,17 @@ const FeedPage = () => {
     });
     if (!ok) return;
     const formValue = ref.current!.getFieldsValue();
-    const stopAt = formValue.start + formValue.right * MINUTE + formValue.left * MINUTE;
+    const left = formValue.left * MINUTE;
+    const right = formValue.right * MINUTE;
+    const stopAt = formValue.start + left + right;
     feedDataBase.add({
-      id: Date.now(),
+      id: formValue.start,
       timestamps: stopAt,
+      type: 'mon',
       stop: stopAt,
-      left: formValue.left,
-      right: formValue.right,
-      volume: formValue.left + formValue.right,
+      left,
+      right,
+      volume: left + right,
     });
   }, []);
 

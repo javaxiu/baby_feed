@@ -56,7 +56,7 @@ const mock = async () => {
   // await mock()
   await sleep(1000);
 
-  if ((await feedDataBase.reload()).length === 0) {
+  if ((await feedDataBase.reload())!.length === 0) {
     const list: FeedRecordOld[] = JSON.parse(localStorage.getItem('feed_records') || '[]')
     feedDataBase.table.bulkAdd(list.map(x => {
       const volume = getTimesOfList(x.times, false, true);

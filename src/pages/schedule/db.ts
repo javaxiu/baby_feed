@@ -5,5 +5,5 @@ export interface Schedule {
   event: string
 }
 
-const scheduleDb = new DataBase<Schedule>('schedule', []);
+const scheduleDb = new DataBase<Schedule>('schedule');
 export default scheduleDb;

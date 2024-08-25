@@ -43,4 +43,4 @@ export type PeepRecord = {
   time: number,
 }
 
-export default new DataBase<PoopRecord | PeepRecord>('poop', []);
+export default new DataBase<PoopRecord | PeepRecord>('poop');

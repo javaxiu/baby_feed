@@ -40,10 +40,16 @@ export const ring = new class Ring {
       src: mamaMp3,
       ref: this.el,
     }));
-    feedDataBase.latest().then(last => {
-      this.feed(last?.stop);
-      sleep(3000).then(this.check);
+    const refreshFromDb = () => {
+      feedDataBase.latest().then(last => {
+        this.feed(last?.stop);
+        sleep(3000).then(this.check);
+      });
+    }
+    feedDataBase.event.on('*', () => {
+      refreshFromDb();
     });
+    refreshFromDb();
   }
   feed(time?: number) {
     if (!time) {

@@ -27,7 +27,7 @@ class DataBase<T extends Record<string, any>> {
 
   event = mitt();
 
-  constructor(private storageKey: string, private initial: WithBasicInfo<T>[] = []) {
+  constructor(private storageKey: string) {
     indexDb.version(2).stores({
       [storageKey]: "id, timestamps",
     });
