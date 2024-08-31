@@ -14,6 +14,9 @@
 @rem limitations under the License.
 @rem
 
+set http_proxy=http://127.0.0.1:7897
+set https_proxy=https://127.0.0.1:7897
+
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem

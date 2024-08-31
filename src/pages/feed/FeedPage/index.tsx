@@ -85,7 +85,7 @@ const FeedPage = () => {
     const stopAt = formValue.start + left + right;
     feedDataBase.add({
       id: formValue.start,
-      timestamps: stopAt,
+      timestamps: formValue.start,
       type: 'mon',
       stop: stopAt,
       left,
@@ -122,7 +122,14 @@ const FeedPage = () => {
           <>
           <div className="feed-control-total">
             <div className='text-center text-lg'>
-              {dayjs(last(startFeedingTime!)).format('HH:mm:ss')} 开始喂的
+              {
+                startFeedingTime!.map((e, i) => (
+                  <div key={e.valueOf()}>
+                    第{i+1}次喂: {dayjs(e).format('HH:mm:ss')}
+                  </div>
+                ))
+              }
+              
             </div>
             <div className='flex justify-center items-center'>
               <span className='pr-2'>一共喂了</span> <b>{msFormat((times[0] + times[1]))}</b>
