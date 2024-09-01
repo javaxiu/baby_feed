@@ -32,6 +32,8 @@ export const ring = new class Ring {
   nextNotifyTime = 0;
   navigate?: Function;
   el = createRef<HTMLAudioElement>();
+  dialogVisible = false;
+
   async init(navigate: Function) {
     this.navigate = navigate;
     const container = document.createElement('div');
@@ -77,15 +79,19 @@ export const ring = new class Ring {
   check = () => {
     if (this.nextNotifyTime < Date.now()) {
       this.play(true);
+      if (this.dialogVisible) return;
+      this.dialogVisible = true;
       Dialog.confirm({
         title: '该喂宝宝了哦',
         cancelText: '再等30分钟',
         confirmText: '现在喂',
         onCancel: () => {
           this.delay(0.5 * HOUR);
+          this.dialogVisible = false;
         },
         onConfirm: () =>{
           this.delay(1 * MINUTE);
+          this.dialogVisible = false;
         }
       })
       return;

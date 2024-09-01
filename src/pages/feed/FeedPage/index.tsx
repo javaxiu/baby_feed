@@ -9,12 +9,11 @@ import { useLocalStorageState, useMemoizedFn } from "ahooks";
 import { Form, Input } from 'antd-mobile';
 import type { FormInstance } from 'antd-mobile/es/components/form';
 import dayjs from 'dayjs';
-import { createRef, useCallback, useState } from "react";
+import { createRef, useCallback, useEffect, useState } from "react";
 import { feedDataBase, ring } from "../db";
 import FeedBtn from "./FeedBtn";
 import './index.scss';
 import { feedSignal, useFeedSignalChange, useIsFeeding } from "./signal";
-import { last } from 'underscore';
 
 const FeedPage = () => {
   const [times = [0, 0], setTimes] = useState<[number, number]>([0, 0]);
@@ -26,11 +25,18 @@ const FeedPage = () => {
     ring.feed();
   });
 
-  const reset = useCallback(() => {
+  useEffect(() => {
+    const total = times[0] + times[1];
+    if (total > 30 * MINUTE) {
+      onClickDone();
+    }
+  }, [times]);
+
+  const reset = useMemoizedFn(() => {
     feedSignal.set('finish');
     setTimes([0, 0]);
     setStartFeedingTime([]);
-  }, []);
+  });
 
   useFeedSignalChange(null, (s) => {
     if (s === 'left' || s === 'right') {

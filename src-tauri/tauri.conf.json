@@ -1,6 +1,6 @@
 {
   "productName": "babyfeed",
-  "version": "0.1.12",
+  "version": "0.1.14",
   "identifier": "com.babyfeed.dev",
   "build": {
     "beforeDevCommand": "pnpm dev",

@@ -32,5 +32,9 @@ export default defineConfig(async () => ({
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
-  }
+  },
+
+  define: {
+    __APP_VERSION__: JSON.stringify(require('./src-tauri/tauri.conf.json')['version']),
+  },
 }));

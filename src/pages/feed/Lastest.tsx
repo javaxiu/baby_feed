@@ -7,6 +7,7 @@ import hungryGif from '@assets/hungry.gif';
 import { ring, feedDataBase } from './db';
 import { HOUR, msFormat } from '@utils/helpers';
 import { useUpdate } from 'ahooks';
+import classNames from 'classnames';
 
 export const LatestPrompt = () => {
   const latest = feedDataBase.useLatest();
@@ -33,13 +34,15 @@ export const LatestPrompt = () => {
   
   if (!latest) return <div>还没有记录耶</div>;
 
+  const { left = 0, right = 0 } = latest || {};
+
   return (
     <div className="text-center text-base">
       <div className='flex items-center justify-center'>
         <div>上次 {dayjs(lastTime).format('HH:mm')}</div>
         <div className='ml-1'>
-          左: <b>{msFormat(latest!.left || 0)}</b>,
-          右: <b>{msFormat(latest!.right || 0)}</b> 哦
+          <span className={classNames({ 'text-primary font-bold': left > right })}>左</span>: <b>{msFormat(left)}</b>; &nbsp;
+          <span className={classNames({ 'text-primary font-bold': left < right })}>右</span>: <b>{msFormat(right)}</b> 哦
         </div>
       </div>
 

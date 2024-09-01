@@ -58,8 +58,8 @@ const TodayFeedStatistics = () => {
 export default () => {
   return (
     <div className='home-page'>
-      <div className='page-title home-page-greeting' onClick={upload}>
-        <div className='home-page-greeting-name'>小满</div>
+      <div className='page-title home-page-greeting'>
+        <div className='home-page-greeting-name' onClick={upload}>小满</div>
         <div className='home-page-greeting-days'>已经出生 <b>{dayjs().diff(dayjs('2024-05-20'), 'day')}</b> 天啦</div>
       </div>
       <img src={feedGif} className='home-page-gif'/>
@@ -67,6 +67,7 @@ export default () => {
       <EventNotice />
       <FeedChart />
       <PoopChart />
+      <div className='flex justify-center p-2'>v:{__APP_VERSION__}</div>
     </div>
   );
 }
